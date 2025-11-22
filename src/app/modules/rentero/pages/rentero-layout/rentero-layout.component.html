@@ -1,0 +1,234 @@
+<div class="contenedor-principal">
+  <main class="contenido-principal">
+    <div class="tarjeta-propiedades">
+      <div class="encabezado-tarjeta">
+        <div class="titulo-seccion">
+          <i class="bi bi-buildings"></i>
+          <div class="texto-titulo">
+            <h2>Gestión de Propiedades</h2>
+            <p class="subtitulo">Administra y controla tus propiedades</p>
+          </div>
+        </div>
+        <!-- Botón con clase nueva para hacerlo más pequeño -->
+        <button class="boton boton-agregar boton-pequeno" (click)="navegarAFormulario()">
+          <i class="bi bi-plus-circle"></i>
+          Agregar Propiedad
+        </button>
+      </div>
+
+      <!-- Estado de carga -->
+      <div *ngIf="cargando" class="estado-carga">
+        <div class="spinner-carga"></div>
+        <p>Cargando propiedades...</p>
+      </div>
+
+      <!-- Estado de error -->
+      <div *ngIf="error && !cargando" class="estado-error">
+        <div class="mensaje-error">
+          <i class="bi bi-exclamation-triangle"></i>
+          <span>{{ error }}</span>
+          <button class="boton boton-secundario" (click)="cargarPropiedades()">
+            <i class="bi bi-arrow-clockwise"></i>
+            Reintentar
+          </button>
+        </div>
+      </div>
+
+      <!-- Estado vacío -->
+      <div *ngIf="!cargando && !error && propiedades.length === 0" class="estado-vacio">
+        <div class="icono-vacio">
+          <i class="bi bi-house-door"></i>
+        </div>
+        <h3>No tienes propiedades registradas</h3>
+        <p>Comienza registrando tu primera propiedad para poder gestionar unidades y generar ingresos.</p>
+        <button class="boton boton-agregar" (click)="navegarAFormulario()">
+          <i class="bi bi-plus-circle"></i>
+          Registrar Primera Propiedad
+        </button>
+      </div>
+
+      <!-- Contenido con datos -->
+      <div class="cuerpo-tarjeta" *ngIf="!cargando && !error && propiedades.length > 0">
+        <div class="contenedor-tabla">
+          <table class="tabla-propiedades">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Ubicación</th>
+                <th>Unidades</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Fila de propiedad -->
+              <ng-container *ngFor="let propiedad of propiedades; trackBy: trackByPropiedadId">
+                <tr class="fila-propiedad" [class.expandida]="propiedadExpandida === propiedad.id">
+                  <td>
+                    <div class="celda-nombre">
+                      <i class="bi bi-house-door"></i>
+                      <span>{{ propiedad.nombre || 'Sin nombre' }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="celda-ubicacion">
+                      <div class="direccion-principal">
+                        {{ propiedad.calle + ' ' + propiedad.numero }}
+                      </div>
+                      <div class="direccion-secundaria">
+                        {{ propiedad.colonia + ', ' + propiedad.municipio }}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="info-unidades">
+                      <button
+                        class="contador-unidades-btn"
+                        (click)="toggleUnidades(propiedad.id)"
+                        title="Ver/Ocultar unidades">
+                        <i class="bi bi-door-open"></i>
+                        {{ contarUnidades(propiedad.id) }} unidades
+                        <i class="bi toggle-icon"
+                           [class.bi-chevron-down]="propiedadExpandida !== propiedad.id"
+                           [class.bi-chevron-up]="propiedadExpandida === propiedad.id"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="grupo-acciones">
+                      <button
+                        class="boton boton-agregar-unidad"
+                        (click)="agregarUnidad(propiedad.id)"
+                        title="Nueva Unidad">
+                        <i class="bi bi-plus-circle"></i>
+                        Nueva Unidad
+                      </button>
+                      <button
+                        class="boton boton-editar"
+                        (click)="editarPropiedad(propiedad.id)"
+                        title="Editar Propiedad">
+                       <i class="bi bi-pencil-square"></i>
+                        Editar
+                      </button>
+                      <button
+                        class="boton boton-eliminar"
+                        (click)="eliminarPropiedad(propiedad.id)"
+                        title="Eliminar Propiedad">
+                        <i class="bi bi-trash"></i>
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Fila expandible con unidades -->
+                <tr *ngIf="propiedadExpandida === propiedad.id" class="fila-unidades">
+                  <td colspan="4">
+                    <div class="contenedor-unidades">
+                      <div class="encabezado-unidades">
+                        <h4>
+                          <i class="bi bi-door-open-fill"></i>
+                          Unidades de {{ propiedad.nombre }}
+                        </h4>
+                        <button
+                          class="boton-recargar"
+                          (click)="recargarDatos()"
+                          title="Recargar datos">
+                          <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                      </div>
+
+                      <!-- Estado de carga de unidades -->
+                      <div *ngIf="cargandoUnidades" class="carga-unidades">
+                        <div class="spinner-pequeno"></div>
+                        <span>Cargando unidades...</span>
+                      </div>
+
+                      <!-- Sin unidades -->
+                      <div *ngIf="!cargandoUnidades && unidadesActuales.length === 0" class="sin-unidades">
+                        <i class="bi bi-house-x"></i>
+                        <p>Esta propiedad no tiene unidades registradas</p>
+                        <button
+                          class="boton boton-agregar"
+                          (click)="agregarUnidad(propiedad.id)">
+                          <i class="bi bi-plus-circle"></i>
+                          Agregar Primera Unidad
+                        </button>
+                      </div>
+
+                      <!-- Tabla de unidades CORREGIDA -->
+                      <div *ngIf="!cargandoUnidades && unidadesActuales.length > 0" class="tabla-unidades-container">
+                        <table class="tabla-unidades">
+                          <thead>
+                            <tr>
+                              <th>Nombre</th>
+                              <th>Precio</th>
+                              <th>Características</th>
+                              <th>Servicios</th>
+                              <th>Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let unidad of unidadesActuales; trackBy: trackByUnidadId">
+                              <td>
+                                <div class="nombre-unidad">
+                                  <i class="bi bi-door-closed"></i>
+                                  <strong>{{ unidad.nombre || 'Sin nombre' }}</strong>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="precio-unidad">
+                                  {{ formatearPrecio(unidad.precio) }}
+                                  <small>/mes</small>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="caracteristicas-unidad">
+                                  <span *ngIf="unidad.descripcion?.terraza" class="caracteristica">
+                                    <i class="bi bi-building"></i> Terraza
+                                  </span>
+                                  <span *ngIf="unidad.descripcion?.amueblado" class="caracteristica">
+                                    <i class="bi bi-house-door"></i> Amueblado
+                                  </span>
+                                  <span *ngIf="!unidad.descripcion?.terraza && !unidad.descripcion?.amueblado" class="sin-caracteristicas">
+                                    Sin características especiales
+                                  </span>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="servicios-unidad">
+                                  {{ obtenerServicios(unidad) }}
+                                </div>
+                              </td>
+                              <td>
+                                <div class="acciones-unidad">
+                                  <button
+                                    class="boton-mini boton-editar"
+                                    (click)="editarUnidad(unidad.id)"
+                                    title="Editar unidad"
+                                    [disabled]="cargandoUnidades">
+                                    <i class="bi bi-pencil"></i>
+                                  </button>
+                                  <button
+                                    class="boton-mini boton-eliminar"
+                                    (click)="eliminarUnidad(unidad.id)"
+                                    title="Eliminar unidad (PERMANENTE)"
+                                    [disabled]="cargandoUnidades">
+                                    <i class="bi bi-trash"></i>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

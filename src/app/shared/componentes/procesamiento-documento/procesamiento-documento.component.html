@@ -1,0 +1,68 @@
+<div *ngIf="visible" class="procesamiento-overlay" aria-live="assertive" aria-busy="true">
+  <div class="procesamiento-card" role="status" aria-label="Verificando documento">
+    
+    <!-- Header simple y elegante -->
+    <div class="card-header">
+      <div class="header-icon">
+        <i class="bi bi-file-earmark-check"></i>
+      </div>
+      <div class="header-content">
+        <h3 class="header-title">Verificando Documento</h3>
+        <p class="header-subtitle">Por favor espera un momento</p>
+      </div>
+    </div>
+
+    <!-- Scanner mejorado -->
+    <div class="scanner-wrapper">
+      <div class="scanner" [class.has-image]="esImagen">
+        
+        <!-- Imagen del documento -->
+        <img
+          *ngIf="esImagen && previewUrl"
+          [src]="previewUrl"
+          alt="Documento en verificación"
+          class="doc-image"
+        />
+
+        <!-- Placeholder para PDF -->
+        <div *ngIf="!esImagen" class="doc-placeholder">
+          <div class="placeholder-icon">
+            <i class="bi bi-file-earmark-pdf"></i>
+          </div>
+          <span class="placeholder-label">Documento PDF</span>
+        </div>
+
+        <!-- Overlay con gradiente -->
+        <div class="scanner-overlay"></div>
+        
+        <!-- Línea de escaneo elegante -->
+        <div class="scan-beam"></div>
+        
+        <!-- Marco del scanner -->
+        <div class="scanner-frame">
+          <div class="frame-corner tl"></div>
+          <div class="frame-corner tr"></div>
+          <div class="frame-corner bl"></div>
+          <div class="frame-corner br"></div>
+        </div>
+      </div>
+
+      <!-- Barra de progreso minimalista -->
+      <div class="progress-section">
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <p class="progress-text">{{ mensaje || 'Procesando documento' }}</p>
+      </div>
+    </div>
+
+    <!-- Footer con spinner -->
+    <div class="card-footer">
+      <div class="spinner-wrapper">
+        <div class="spinner"></div>
+      </div>
+      <p class="footer-text">Este proceso puede tardar unos segundos</p>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<header class="header">
+  <div class="header-container">
+    <div class="header-logo">
+      <a routerLink="/" class="logo-link">
+        <span>UniRenta</span>
+      </a>
+    </div>
+
+    <nav class="header-nav" [class.open]="isMenuOpen">
+      <!-- Si NO está autenticado -->
+      <ng-container *ngIf="!estaAutenticado">
+        <a routerLink="/rentero/login" class="nav-link" (click)="closeMenu()">
+          Iniciar Sesión
+        </a>
+      </ng-container>
+
+      <!-- Si SÍ está autenticado -->
+      <ng-container *ngIf="estaAutenticado">
+        <a routerLink="/rentero" class="nav-link">Gestionar Propiedades</a>
+        <div class="user-profile">
+            <div class="user-info">
+              <div class="user-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="greeting-container">
+                <span class="user-greeting">Bienvenido</span>
+                <span class="user-name">{{ nombreUsuario }}</span>
+              </div>
+            </div>
+            <button class="logout-btn" (click)="cerrarSesion()" title="Cerrar Sesión">
+              <i class="bi bi-box-arrow-right"></i>
+            </button>
+          </div>
+      </ng-container>
+    </nav>
+
+    <button
+      class="menu-toggle"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-label="Toggle navigation menu">
+      <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+      <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+      <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+    </button>
+  </div>
+</header>

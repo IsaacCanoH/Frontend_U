@@ -1,0 +1,884 @@
+// Variables de colores
+$color-fondo: #EAEDEF;
+$color-tarjeta: #FEFDFE;
+$color-texto: #1B1C1D;
+$color-primario: #1A3B55;
+$color-agregar: #228B22;
+$color-error: #DC143C;
+$color-borde: #d1d5db;
+
+// Contenedor principal con split layout
+.contenedor-formulario-propiedad {
+  min-height: 100vh;
+  display: flex;
+
+  @media (max-width: 968px) {
+    flex-direction: column;
+  }
+}
+
+// Contenedor de imagen izquierdo (1/3 del ancho)
+.contenedor-imagen {
+  flex: 0 0 33.333%;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+
+  @media (max-width: 968px) {
+    min-height: 300px;
+    flex: none;
+  }
+
+  .imagen-fondo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: blur(6px);
+  }
+
+  .overlay-imagen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 59, 85, 0.45) 0%, rgba(52, 73, 94, 0.35) 100%);
+    backdrop-filter: blur(1px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    z-index: 1;
+  }
+
+  .frase-animada {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.3;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeInScale 0.6s ease-out;
+
+    @media (max-width: 1200px) {
+      font-size: 2rem;
+    }
+
+    @media (max-width: 968px) {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Contenedor de formulario derecho (2/3 del ancho)
+.contenedor-formulario {
+  flex: 0 0 66.666%;
+  background-color: $color-fondo;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+
+  @media (max-width: 968px) {
+    padding: 1.5rem;
+    flex: 1;
+  }
+}
+
+.tarjeta-registro {
+  background: $color-tarjeta;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+  max-width: 900px;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+
+  @media (max-width: 576px) {
+    padding: 1.5rem;
+  }
+}
+
+// Encabezado
+.encabezado-registro {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  .icono-titulo {
+    font-size: 2.5rem;
+    color: $color-primario;
+    margin-bottom: 0.5rem;
+  }
+
+  .titulo {
+    color: $color-primario;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .subtitulo {
+    color: lighten($color-texto, 30%);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+// Indicador de pasos
+.indicador-pasos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+
+  .paso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    .circulo-paso {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: lighten($color-borde, 5%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: lighten($color-texto, 40%);
+      transition: all 0.3s ease;
+    }
+
+    .texto-paso {
+      font-size: 0.75rem;
+      color: lighten($color-texto, 30%);
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    &.activo {
+      .circulo-paso {
+        background: $color-primario;
+        color: white;
+        box-shadow: 0 0 0 4px rgba($color-primario, 0.15);
+      }
+
+      .texto-paso {
+        color: $color-primario;
+        font-weight: 600;
+      }
+    }
+
+    &.completado .circulo-paso {
+      background: $color-agregar;
+      color: white;
+    }
+  }
+
+  .linea-paso {
+    height: 2px;
+    width: 50px;
+    background: lighten($color-borde, 5%);
+    transition: background 0.3s ease;
+
+    &.activa {
+      background: $color-agregar;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .texto-paso {
+      font-size: 0.7rem;
+    }
+  }
+}
+
+// Formulario
+.formulario-paso {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Sección de ubicación
+.seccion-ubicacion {
+  background: lighten($color-fondo, 3%);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+
+  .titulo-seccion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-primario;
+    margin: 0 0 0.85rem 0;
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Campos del formulario - 3 columnas
+.fila-campos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+
+  @media (max-width: 968px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+.grupo-campo {
+  margin-bottom: 0;
+
+  .etiqueta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $color-texto;
+    margin-bottom: 0.4rem;
+
+    i {
+      color: $color-primario;
+      font-size: 0.85rem;
+    }
+  }
+
+  .campo-entrada {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 2px solid $color-borde;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    background: white;
+    color: $color-texto;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primario;
+      box-shadow: 0 0 0 3px rgba($color-primario, 0.1);
+    }
+
+    &::placeholder {
+      color: lighten($color-texto, 50%);
+      font-size: 0.8rem;
+    }
+
+    &.invalido {
+      border-color: $color-error;
+      background: rgba($color-error, 0.02);
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($color-error, 0.1);
+      }
+    }
+  }
+
+  .mensaje-error {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: $color-error;
+    font-size: 0.7rem;
+    margin-top: 0.4rem;
+    animation: slideDown 0.2s ease;
+
+    i {
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    span {
+      line-height: 1.3;
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Campo del mapa
+.grupo-campo-mapa {
+  margin-bottom: 0.85rem;
+
+  .etiqueta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $color-texto;
+    margin-bottom: 0.6rem;
+
+    i {
+      color: $color-primario;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+// Zona de archivo
+.zona-archivo {
+  position: relative;
+  border: 2px dashed $color-borde;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: lighten($color-fondo, 3%);
+
+  &:hover {
+    border-color: $color-primario;
+    background: white;
+  }
+
+  &.con-archivo {
+    border-color: $color-agregar;
+    background: rgba($color-agregar, 0.05);
+  }
+
+  .input-archivo {
+    display: none;
+  }
+
+  .etiqueta-archivo {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+
+    .icono-archivo {
+      font-size: 2.5rem;
+      color: $color-primario;
+      transition: transform 0.3s ease;
+    }
+
+    .texto-principal {
+      font-weight: 500;
+      color: $color-texto;
+      font-size: 0.95rem;
+    }
+
+    .texto-secundario {
+      font-size: 0.8rem;
+      color: lighten($color-texto, 40%);
+    }
+
+    &:hover .icono-archivo {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+// Previsualización
+.seccion-previsualizacion {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: lighten($color-fondo, 3%);
+  border-radius: 12px;
+
+  .titulo-previsualizacion {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $color-texto;
+    margin: 0 0 0.75rem 0;
+
+    i {
+      color: $color-primario;
+    }
+  }
+
+  .contenedor-previsualizacion {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .imagen-previsualizacion {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .previsualizacion-pdf {
+    text-align: center;
+    padding: 1.5rem;
+
+    .icono-pdf {
+      font-size: 3rem;
+      color: $color-error;
+      margin-bottom: 0.75rem;
+    }
+
+    .nombre-archivo {
+      font-weight: 500;
+      color: $color-texto;
+      margin: 0 0 0.4rem 0;
+      word-break: break-word;
+      font-size: 0.9rem;
+    }
+
+    .info-archivo {
+      color: lighten($color-texto, 40%);
+      font-size: 0.8rem;
+    }
+  }
+}
+
+// Botones
+.boton {
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  i {
+    font-size: 0.95rem;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(0);
+  }
+}
+
+.boton-primario {
+  background: $color-agregar;
+  color: white;
+
+  &:not(:disabled):hover {
+    background: darken($color-agregar, 8%);
+  }
+
+  &.boton-siguiente {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+
+.boton-secundario {
+  background: lighten($color-texto, 65%);
+  color: $color-texto;
+
+  &:not(:disabled):hover {
+    background: lighten($color-texto, 55%);
+  }
+}
+
+.grupo-botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+  align-items: center;
+
+  .boton {
+    margin: 0;
+    width: 100%;
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Nota informativa sobre tipos de archivos
+.nota-tipos-archivo {
+  background: linear-gradient(135deg, rgba($color-primario, 0.05) 0%, rgba($color-primario, 0.02) 100%);
+  border: 1px solid rgba($color-primario, 0.15);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .nota-contenido {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    i {
+      color: $color-primario;
+      font-size: 1.1rem;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    .nota-texto {
+      flex: 1;
+
+      .nota-principal {
+        color: $color-texto;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.3;
+      }
+
+      .tipos-permitidos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        .tipo-archivo {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          background: rgba($color-primario, 0.1);
+          color: $color-primario;
+          padding: 0.25rem 0.5rem;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          border: 1px solid rgba($color-primario, 0.2);
+
+          i {
+            font-size: 0.8rem;
+            margin: 0;
+          }
+        }
+      }
+
+      .nota-secundaria {
+        color: lighten($color-texto, 20%);
+        font-size: 0.8rem;
+        margin: 0;
+        font-style: italic;
+        line-height: 1.3;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    padding: 0.75rem;
+
+    .nota-contenido {
+      gap: 0.5rem;
+
+      .nota-texto {
+        .tipos-permitidos {
+          gap: 0.25rem;
+
+          .tipo-archivo {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.7rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// <CHANGE> Estilos mejorados para la sección de documentos
+
+// Sección de documento
+.seccion-documento {
+  .titulo-seccion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-primario;
+    margin: 0 0 1rem 0;
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+
+  .grupo-campo {
+    margin-bottom: 1rem;
+  }
+}
+
+// Nota informativa sobre tipos de archivos
+.nota-tipos-archivo {
+  background: linear-gradient(135deg, rgba($color-primario, 0.05) 0%, rgba($color-primario, 0.02) 100%);
+  border: 1px solid rgba($color-primario, 0.15);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .nota-contenido {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    i {
+      color: $color-primario;
+      font-size: 1.1rem;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    .nota-texto {
+      flex: 1;
+
+      .nota-principal {
+        color: $color-texto;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.3;
+      }
+
+      .tipos-permitidos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        .tipo-archivo {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          background: rgba($color-primario, 0.1);
+          color: $color-primario;
+          padding: 0.25rem 0.5rem;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          border: 1px solid rgba($color-primario, 0.2);
+
+          i {
+            font-size: 0.8rem;
+            margin: 0;
+          }
+        }
+      }
+
+      .nota-secundaria {
+        color: lighten($color-texto, 20%);
+        font-size: 0.8rem;
+        margin: 0;
+        font-style: italic;
+        line-height: 1.3;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    padding: 0.75rem;
+
+    .nota-contenido {
+      gap: 0.5rem;
+
+      .nota-texto {
+        .tipos-permitidos {
+          gap: 0.25rem;
+
+          .tipo-archivo {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.7rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Zona de archivo mejorada
+.zona-archivo {
+  position: relative;
+  border: 2px dashed $color-borde;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: lighten($color-fondo, 3%);
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    border-color: $color-primario;
+    background: white;
+  }
+
+  &.con-archivo {
+    border-color: $color-agregar;
+    background: rgba($color-agregar, 0.05);
+  }
+
+  .input-archivo {
+    display: none;
+  }
+
+  .etiqueta-archivo {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+
+    .icono-archivo {
+      font-size: 2.5rem;
+      color: $color-primario;
+      transition: transform 0.3s ease;
+    }
+
+    .texto-principal {
+      font-weight: 500;
+      color: $color-texto;
+      font-size: 0.95rem;
+      max-width: 90%;
+      word-break: break-word;
+      text-align: center;
+    }
+
+    .texto-secundario {
+      font-size: 0.8rem;
+      color: lighten($color-texto, 40%);
+    }
+
+    &:hover .icono-archivo {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+// Previsualización mejorada
+.seccion-previsualizacion {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  background: lighten($color-fondo, 3%);
+  border-radius: 12px;
+  max-height: 350px;
+  overflow: hidden;
+
+  .titulo-previsualizacion {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $color-texto;
+    margin: 0 0 0.85rem 0;
+
+    i {
+      color: $color-primario;
+    }
+  }
+
+  .contenedor-previsualizacion {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+  }
+
+  .imagen-previsualizacion {
+    max-width: 100%;
+    max-height: 230px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    object-fit: contain;
+  }
+
+  .previsualizacion-pdf {
+    text-align: center;
+    padding: 1.5rem;
+
+    .icono-pdf {
+      font-size: 3rem;
+      color: $color-error;
+      margin-bottom: 0.75rem;
+    }
+
+    .nombre-archivo {
+      font-weight: 500;
+      color: $color-texto;
+      margin: 0 0 0.4rem 0;
+      word-break: break-word;
+      font-size: 0.9rem;
+    }
+
+    .info-archivo {
+      color: lighten($color-texto, 40%);
+      font-size: 0.8rem;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .seccion-ubicacion {
+    padding: 1rem;
+  }
+}

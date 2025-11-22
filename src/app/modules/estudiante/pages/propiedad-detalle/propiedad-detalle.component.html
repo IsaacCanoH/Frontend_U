@@ -1,0 +1,246 @@
+<div class="main-container" *ngIf="!cargando && !error && propiedad">
+
+  <div class="property-header">
+    <h1 class="property-title">
+      <span class="title-text">{{ propiedad.nombre }}</span>
+      <span class="title-decoration"></span>
+    </h1>
+    <div class="property-location">
+      <div class="location-icon-wrapper">
+        <i class="fas fa-map-marker-alt"></i>
+      </div>
+      <span>
+        <strong>{{ propiedad.ubicacion.nombre }}</strong> —
+        {{ propiedad.ubicacion.direccion }}
+        {{ propiedad.ubicacion.municipio || propiedad.ubicacion.estado || "" }}
+        {{ propiedad.ubicacion.codigo_postal }}
+      </span>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="main-content">
+      <div class="gallery-card" *ngIf="propiedad.imagenes.length">
+        <div
+          class="gallery-main"
+          (mouseenter)="clearAutoplay()"
+          (mouseleave)="setupAutoplay()"
+        >
+          <img
+            [src]="
+              propiedad.imagenes[imagenActual] || 'assets/default-property.jpg'
+            "
+            [alt]="propiedad.nombre"
+            class="main-image"
+          />
+          <button
+            class="gallery-nav gallery-prev"
+            *ngIf="propiedad.imagenes.length > 1"
+            (click)="imagenAnterior()"
+            aria-label="Imagen anterior"
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button
+            class="gallery-nav gallery-next"
+            *ngIf="propiedad.imagenes.length > 1"
+            (click)="imagenSiguiente()"
+            aria-label="Siguiente imagen"
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
+
+          <div class="gallery-dots" *ngIf="propiedad.imagenes.length > 1">
+            <button
+              *ngFor="let imagen of propiedad.imagenes; let i = index"
+              class="dot"
+              [class.active]="i === imagenActual"
+              (click)="cambiarImagen(i)"
+              [attr.aria-label]="'Ir a imagen ' + (i + 1)"
+            ></button>
+          </div>
+        </div>
+
+        <div class="gallery-thumbnails" *ngIf="propiedad.imagenes.length > 1">
+          <div class="thumbnails-grid">
+            <button
+              *ngFor="let imagen of propiedad.imagenes; let i = index"
+              class="thumbnail"
+              [class.active]="i === imagenActual"
+              (click)="cambiarImagen(i)"
+              [attr.aria-label]="'Miniatura ' + (i + 1)"
+            >
+              <img [src]="imagen" [alt]="'Miniatura ' + (i + 1)" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="propiedadLat !== null && propiedadLng !== null">
+        <div class="card-content">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-map-marked-alt"></i>
+            </div>
+            <h2 class="section-title">Ubicación</h2>
+          </div>
+
+          <app-mapa-detalle [lat]="propiedadLat!" [lng]="propiedadLng!">
+          </app-mapa-detalle>
+        </div>
+      </div>
+
+      <div class="card amenities-card">
+        <div class="card-content">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h2 class="section-title">Lo que incluye este lugar</h2>
+          </div>
+
+          <div class="amenities-grid">
+            <div class="amenity-item" *ngIf="propiedad.descripcion.amueblado">
+              <span>Amueblado</span>
+            </div>
+            <div class="amenity-item" *ngIf="propiedad.descripcion.terraza">
+              <span>Terraza</span>
+            </div>
+
+            <div
+              class="amenity-item"
+              *ngFor="let servicio of propiedad.descripcion.servicios"
+            >
+              <span>{{ servicio | titlecase }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="card description-card"
+        *ngIf="propiedad.descripcion.caracteristicas"
+      >
+        <div class="card-content">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <h2 class="section-title">Descripción del lugar</h2>
+          </div>
+          <div class="description">
+            <p class="description-paragraph">
+              <span class="paragraph-decorator"></span>
+              {{ propiedad.descripcion.caracteristicas }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-sticky">
+        <div class="card pricing-card">
+          <div class="pricing-card-glow"></div>
+          <div class="card-content">
+            <!-- Pricing -->
+            <div class="pricing-section">
+              <div class="price-badge">Precio</div>
+              <div class="price-main">
+                <span class="price-amount"
+                  >${{ propiedad.precio | number : "1.0-0" }}</span
+                >
+                <span class="price-period">/mes</span>
+              </div>
+            </div>
+
+            <div class="rentero-section">
+              <div class="section-header compact">
+                <div class="section-icon">
+                  <i class="fas fa-user-circle"></i>
+                </div>
+                <h3 class="section-title">Rentero</h3>
+              </div>
+
+              <div class="host-profile">
+                <div class="host-avatar-wrapper">
+                  <div class="host-avatar">
+                    <img
+                      src="/assets/avatar-default.png"
+                      alt="Rentero"
+                      class="avatar-image"
+                    />
+                    <div class="avatar-ring"></div>
+                  </div>
+                </div>
+
+                <div class="host-info">
+                  <div class="host-header">
+                    <h4 class="host-name">{{ propiedad.rentero.nombre }}</h4>
+                    <span class="verified-badge">
+                      <i class="fas fa-check-circle"></i>
+                      Verificado
+                    </span>
+                  </div>
+
+                  <div class="host-stats">
+                    <div class="rating">
+                      <i class="fas fa-star star-filled"></i>
+                      <span class="rating-text">5.0</span>
+                      <span class="rating-divider">•</span>
+                      <span class="review-count">+10 reseñas</span>
+                    </div>
+                    <div class="member-since">
+                      <i class="fas fa-calendar-alt"></i>
+                      <span>Rentero desde 2024</span>
+                    </div>
+                  </div>
+
+                  <p class="host-description">
+                    <i class="fas fa-phone-alt"></i>
+                    {{ propiedad.rentero.telefono }} &nbsp;•&nbsp;
+                    <i class="fas fa-envelope"></i>
+                    {{ propiedad.rentero.email }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button class="button2" (click)="contactarRentero()">
+              Contactar Rentero
+              <svg
+                viewBox="0 0 48 48"
+                y="0px"
+                x="0px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"
+                  fill="#fff"
+                ></path>
+                <path
+                  d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"
+                  fill="#fff"
+                ></path>
+                <path
+                  d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c-0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"
+                  fill="#cfd8dc"
+                ></path>
+                <path
+                  d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"
+                  fill="#40c351"
+                ></path>
+                <path
+                  clip-rule="evenodd"
+                  d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z"
+                  fill="#fff"
+                  fill-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

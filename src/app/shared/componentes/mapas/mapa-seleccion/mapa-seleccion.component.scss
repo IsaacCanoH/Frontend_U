@@ -1,0 +1,55 @@
+.mapa-wrap {
+  position: relative;
+}
+.mapa-seleccion {
+  width: 100%;
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: .5rem;
+}
+.loader-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,.75);
+  pointer-events: all;
+}
+.earth-loader {
+  --watercolor: #3344c1;
+  --landcolor: #7cc133;
+  width: 7.5em;
+  height: 7.5em;
+  background-color: var(--watercolor, #3344c1);
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: inset 0 .5em rgb(255 255 255 / 25%), inset 0 -.5em rgb(0 0 0 / 25%);
+  border: .15em solid #fff;
+  animation: startround .3s 1;
+}
+.earth p {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: .5em;
+  font-size: 1.05em;
+  font-family: sans-serif;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+.earth-loader svg:nth-child(1){position:absolute;bottom:-2em;width:7em;height:auto;animation:round1 5s infinite linear .75s}
+.earth-loader svg:nth-child(2){position:absolute;top:-3em;width:7em;height:auto;animation:round1 5s infinite linear}
+.earth-loader svg:nth-child(3){position:absolute;top:-2.5em;width:7em;height:auto;animation:round2 5s infinite linear}
+.earth-loader svg:nth-child(4){position:absolute;bottom:-2.2em;width:7em;height:auto;animation:round2 5s infinite linear .75s}
+@keyframes startround{0%,60%{filter:brightness(130%);box-shadow:none}100%{filter:brightness(100%);box-shadow:inset 0 .5em rgb(255 255 255 / 25%), inset 0 -.5em rgb(0 0 0 / 25%)}}
+@keyframes round1{0%{left:-2em;opacity:100%;transform:skewX(0) rotate(0)}30%{left:-6em;opacity:100%;transform:skewX(-25deg) rotate(25deg)}31%{left:-6em;opacity:0%;transform:skewX(-25deg) rotate(25deg)}35%{left:7em;opacity:0%;transform:skewX(25deg) rotate(-25deg)}45%{left:7em;opacity:100%;transform:skewX(25deg) rotate(-25deg)}100%{left:-2em;opacity:100%;transform:skewX(0) rotate(0)}}
+@keyframes round2{0%{left:5em;opacity:100%;transform:skewX(0) rotate(0)}75%{left:-7em;opacity:100%;transform:skewX(-25deg) rotate(25deg)}76%{left:-7em;opacity:0%;transform:skewX(-25deg) rotate(25deg)}77%{left:8em;opacity:0%;transform:skewX(25deg) rotate(-25deg)}80%{left:8em;opacity:100%;transform:skewX(25deg) rotate(-25deg)}100%{left:5em;opacity:100%;transform:skewX(0) rotate(0)}}
+.mapboxgl-ctrl-geocoder{display:none!important}
+.mapboxgl-ctrl-geocoder *{user-select:none}
+.mapboxgl-ctrl-geocoder input{pointer-events:none}
+.map-actions{display:flex;justify-content:flex-end}
+.btn-confirm{border:1px solid #2563eb;background:#2563eb;color:#fff;font-weight:600;padding:.5rem .875rem;border-radius:8px;cursor:pointer}
+.btn-confirm:hover{filter:brightness(.95)}

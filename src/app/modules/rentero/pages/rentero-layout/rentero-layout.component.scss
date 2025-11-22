@@ -1,0 +1,867 @@
+// Variables de colores basadas en la paleta proporcionada
+$color-fondo-pantalla: #EAEDEF;
+$color-div: #FEFDFE;
+$color-letras: #1B1C1D;
+$color-precios: #3B3B3F;
+$color-header-footer: #1A3B55;
+$color-agregar: #228B22;
+$color-editar: #05242D;
+$color-ver: #EB6D31;
+$color-eliminar: #DC143C;
+$color-blanco: #FEFDFE;
+
+// Contenedor principal
+.contenedor-principal {
+  background-color: $color-fondo-pantalla;
+  min-height: 100vh;
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+.contenido-principal {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Tarjeta de propiedades
+.tarjeta-propiedades {
+  background-color: $color-div;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+// Encabezado de la tarjeta
+.encabezado-tarjeta {
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid lighten($color-letras, 70%);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+}
+
+.titulo-seccion {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  >i {
+    font-size: 2.5rem;
+    color: $color-header-footer;
+    flex-shrink: 0;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  .texto-titulo {
+    h2 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: $color-letras;
+      line-height: 1.2;
+
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+      }
+    }
+
+    .subtitulo {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.9rem;
+      color: lighten($color-letras, 35%);
+      font-weight: 400;
+    }
+  }
+}
+
+// Estados de carga, error y vacío
+.estado-carga {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: $color-letras;
+
+  .spinner-carga {
+    width: 40px;
+    height: 40px;
+    border: 4px solid lighten($color-header-footer, 70%);
+    border-top: 4px solid $color-header-footer;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    color: lighten($color-letras, 20%);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.estado-error {
+  padding: 2rem;
+
+  .mensaje-error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    background-color: lighten($color-eliminar, 45%);
+    border: 1px solid lighten($color-eliminar, 35%);
+    border-radius: 12px;
+    color: darken($color-eliminar, 10%);
+
+    i {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    span {
+      flex: 1;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+    }
+  }
+}
+
+.estado-vacio {
+  padding: 4rem 2rem;
+  text-align: center;
+
+  .icono-vacio {
+    font-size: 4rem;
+    color: lighten($color-letras, 40%);
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    color: $color-letras;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  p {
+    color: lighten($color-letras, 20%);
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+}
+
+// Cuerpo de la tarjeta
+.cuerpo-tarjeta {
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+.contenedor-tabla {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid lighten($color-letras, 70%);
+}
+
+// Tabla de propiedades
+.tabla-propiedades {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $color-blanco;
+
+  thead {
+    background-color: lighten($color-header-footer, 65%);
+
+    tr {
+      th {
+        padding: 1rem 1.25rem;
+        text-align: left;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $color-header-footer;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid lighten($color-letras, 65%);
+
+        @media (max-width: 768px) {
+          padding: 0.75rem 1rem;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+      border-bottom: 1px solid lighten($color-letras, 75%);
+
+      &:hover {
+        background-color: lighten($color-fondo-pantalla, 3%);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        padding: 1.25rem;
+        color: $color-letras;
+        font-size: 0.95rem;
+        vertical-align: middle;
+
+        @media (max-width: 768px) {
+          padding: 1rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+// Celdas específicas
+.celda-nombre {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+
+  i {
+    font-size: 1.25rem;
+    color: $color-header-footer;
+    flex-shrink: 0;
+  }
+}
+
+.celda-ubicacion {
+  .direccion-principal {
+    font-weight: 500;
+    color: $color-letras;
+    margin-bottom: 0.25rem;
+  }
+
+  .direccion-secundaria {
+    font-size: 0.85rem;
+    color: lighten($color-letras, 25%);
+  }
+}
+
+.badge-estado {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.visible {
+    background-color: lighten($color-agregar, 45%);
+    color: darken($color-agregar, 10%);
+  }
+
+  &.oculta {
+    background-color: lighten($color-letras, 65%);
+    color: darken($color-letras, 10%);
+  }
+}
+
+.info-unidades {
+  .contador-unidades {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: $color-letras;
+
+    i {
+      color: $color-header-footer;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Grupo de acciones
+.grupo-acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+}
+
+// Botones
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+
+  i {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 1200px) {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+.boton-agregar {
+  background-color: $color-agregar;
+  color: $color-blanco;
+
+  &:hover {
+    background-color: darken($color-agregar, 8%);
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.boton-pequeno {
+  padding: 0.5rem 0.9rem !important;
+  font-size: 0.8rem !important;
+
+  i {
+    font-size: 0.9rem !important;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.45rem 0.8rem !important;
+    font-size: 0.75rem !important;
+    width: auto !important; // Anular el width: 100% en móviles
+
+    i {
+      font-size: 0.85rem !important;
+    }
+  }
+}
+
+.boton-agregar-unidad {
+  background-color: lighten($color-agregar, 10%);
+  color: $color-blanco;
+
+  &:hover {
+    background-color: $color-agregar;
+  }
+}
+
+.boton-editar {
+  background-color: $color-editar;
+  color: $color-blanco;
+
+  &:hover {
+    background-color: darken($color-editar, 8%);
+  }
+}
+
+.boton-ver {
+  background-color: $color-ver;
+  color: $color-blanco;
+
+  &:hover {
+    background-color: darken($color-ver, 8%);
+  }
+}
+
+.boton-eliminar {
+  background-color: $color-eliminar;
+  color: $color-blanco;
+
+  &:hover {
+    background-color: darken($color-eliminar, 8%);
+  }
+}
+
+.boton-secundario {
+  background-color: lighten($color-letras, 65%);
+  color: $color-letras;
+
+  &:hover {
+    background-color: lighten($color-letras, 55%);
+  }
+}
+
+// Responsive adicional
+@media (max-width: 576px) {
+  .contenedor-tabla {
+    border: none;
+    border-radius: 0;
+  }
+
+  .tabla-propiedades {
+    thead {
+      display: none;
+    }
+
+    tbody {
+      tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid lighten($color-letras, 70%);
+        border-radius: 8px;
+        overflow: hidden;
+
+        td {
+          display: block;
+          text-align: left;
+          padding: 0.75rem 1rem;
+          border-bottom: 1px solid lighten($color-letras, 75%);
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: $color-header-footer;
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+          }
+
+          &:nth-child(1)::before {
+            content: "Nombre:";
+          }
+
+          &:nth-child(2)::before {
+            content: "Ubicación:";
+          }
+
+          &:nth-child(3)::before {
+            content: "Unidades:";
+          }
+
+          &:nth-child(4)::before {
+            content: "Acciones:";
+          }
+        }
+      }
+    }
+  }
+
+  .grupo-acciones {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+// Fila de propiedad expandida
+.fila-propiedad {
+  &.expandida {
+    background-color: lighten($color-fondo-pantalla, 5%);
+    border-left: 4px solid $color-header-footer;
+  }
+}
+
+// Contador de unidades como botón
+.contador-unidades-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: $color-letras;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: lighten($color-header-footer, 70%);
+    color: $color-header-footer;
+  }
+
+  .toggle-icon {
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+  }
+}
+
+// Fila de unidades (expandible)
+.fila-unidades {
+  td {
+    padding: 0;
+    border-top: none;
+  }
+}
+
+// Contenedor principal de unidades
+.contenedor-unidades {
+  padding: 20px;
+  background: #0a2743;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+// Encabezado con botón de recargar a la derecha
+.encabezado-unidades {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
+
+  h4 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      color: #007bff;
+    }
+  }
+}
+
+// Botón de recargar
+.boton-recargar {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &:hover {
+    background: #5a6268;
+  }
+}
+
+// Estados de carga
+.carga-unidades,
+.sin-unidades {
+  text-align: center;
+  padding: 30px 20px;
+  color: #6c757d;
+
+  .spinner-pequeno {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+  }
+
+  i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Contenedor de tabla
+.tabla-unidades-container {
+  overflow-x: auto;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+// Tabla de unidades
+.tabla-unidades {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+
+  thead {
+    background: #ffffff;
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: white;
+      border: none;
+
+      &:last-child {
+        text-align: center;
+        width: 120px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #dee2e6;
+
+      &:hover {
+        background: #f8f9fa;
+      }
+
+      td {
+        padding: 12px;
+        vertical-align: middle;
+        border: none;
+
+        &:last-child {
+          text-align: center;
+          width: 120px;
+        }
+      }
+    }
+  }
+}
+
+// Celdas específicas
+.nombre-unidad {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+
+  i {
+    color: #007bff;
+  }
+}
+
+.precio-unidad {
+  font-weight: 700;
+  color: #28a745;
+
+  small {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 400;
+  }
+}
+
+.caracteristicas-unidad {
+  .caracteristica {
+    background: #d4edda;
+    color: #155724;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    margin-right: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+
+    i {
+      font-size: 0.7rem;
+    }
+  }
+
+  .sin-caracteristicas {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.85rem;
+  }
+}
+
+.servicios-unidad {
+  color: #495057;
+  font-size: 0.9rem;
+  max-width: 200px;
+  word-wrap: break-word;
+}
+
+// Botones de acciones
+.acciones-unidad {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.boton-mini {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  &.boton-editar {
+    background: #007bff;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: #0056b3;
+    }
+  }
+
+  &.boton-eliminar {
+    background: #dc3545;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: #c82333;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .tabla-unidades {
+    font-size: 0.8rem;
+
+    th,
+    td {
+      padding: 8px;
+    }
+  }
+
+  .acciones-unidad {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  // Estilos para SweetAlert2
+  .swal-wide {
+    width: 90% !important;
+    max-width: 500px !important;
+  }
+
+  .swal2-popup {
+    font-family: inherit !important;
+    border-radius: 12px !important;
+
+    .swal2-title {
+      font-size: 1.5rem !important;
+      font-weight: 600 !important;
+      color: $color-letras !important;
+    }
+
+    .swal2-html-container {
+      font-size: 1rem !important;
+      line-height: 1.5 !important;
+      color: $color-letras !important;
+    }
+
+    .swal2-confirm {
+      background-color: $color-eliminar !important;
+      border-color: $color-eliminar !important;
+      font-weight: 500 !important;
+      padding: 0.75rem 2rem !important;
+
+      &:hover {
+        background-color: darken($color-eliminar, 8%) !important;
+        border-color: darken($color-eliminar, 8%) !important;
+      }
+    }
+
+    .swal2-cancel {
+      background-color: $color-blanco !important;
+      color: $color-letras !important;
+      border: 2px solid lighten($color-letras, 50%) !important;
+      font-weight: 500 !important;
+      padding: 0.75rem 2rem !important;
+
+      &:hover {
+        background-color: lighten($color-letras, 65%) !important;
+        border-color: lighten($color-letras, 40%) !important;
+
+        .boton-mini {
+          width: 100%;
+        }
+
+        .encabezado-unidades {
+          flex-direction: column;
+          gap: 10px;
+          align-items: flex-start;
+
+          .boton-recargar {
+            align-self: flex-end;
+          }
+        }
+      }
+
+      .swal2-loader {
+        border-color: $color-header-footer transparent $color-header-footer transparent !important;
+      }
+    }
+  }
+}

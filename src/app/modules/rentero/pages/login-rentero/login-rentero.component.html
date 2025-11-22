@@ -1,0 +1,116 @@
+<div class="contenedor-login">
+  <!-- Contenedor de imagen izquierdo -->
+  <div class="contenedor-imagen">
+    <div class="overlay-imagen">
+      <h2 class="frase-animada">
+        Bienvenido de nuevo
+      </h2>
+    </div>
+    <img src="/assets/fondo.png" alt="Login" class="imagen-fondo" />
+  </div>
+
+  <!-- Contenedor de formulario derecho -->
+  <div class="contenedor-formulario">
+    <div class="tarjeta-login">
+      <!-- Encabezado -->
+      <div class="encabezado-login">
+        <i class="bi bi-person-check-fill icono-titulo"></i>
+        <h2 class="titulo">Iniciar Sesión</h2>
+        <p class="subtitulo">Accede a tu cuenta de rentero</p>
+      </div>
+
+      <!-- Formulario de login -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="formulario-login">
+
+        <!-- Mostrar error general -->
+        <div *ngIf="error" class="alerta-error">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ error }}</span>
+        </div>
+
+        <!-- Campo Email -->
+        <div class="grupo-campo">
+          <label for="email" class="etiqueta">
+            <i class="bi bi-envelope"></i>
+            Correo electrónico
+          </label>
+          <input
+            id="email"
+            formControlName="email"
+            type="email"
+            class="campo-entrada"
+            [class.invalido]="emailInvalido"
+            placeholder="ejemplo@correo.com"
+            autocomplete="email"
+          />
+          <div class="mensaje-error" *ngIf="emailInvalido">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <span>{{ obtenerMensajeError('email') }}</span>
+          </div>
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div class="grupo-campo">
+          <label for="password" class="etiqueta">
+            <i class="bi bi-lock"></i>
+            Contraseña
+          </label>
+          <div class="campo-password">
+            <input
+              id="password"
+              formControlName="password"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              class="campo-entrada"
+              [class.invalido]="passwordInvalido"
+              placeholder="Tu contraseña"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              class="boton-toggle-password"
+              (click)="toggleMostrarPassword()"
+              tabindex="-1"
+            >
+              <i class="bi" [class.bi-eye]="!mostrarPassword" [class.bi-eye-slash]="mostrarPassword"></i>
+            </button>
+          </div>
+          <div class="mensaje-error" *ngIf="passwordInvalido">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <span>{{ obtenerMensajeError('password') }}</span>
+          </div>
+        </div>
+
+        <!-- Botón de inicio de sesión -->
+        <button
+          type="submit"
+          class="boton boton-primario"
+          [disabled]="cargando || loginForm.invalid"
+        >
+          <span *ngIf="!cargando">
+            Iniciar Sesión
+            <i class="bi bi-box-arrow-in-right"></i>
+          </span>
+          <span *ngIf="cargando" class="contenedor-carga">
+            <div class="spinner"></div>
+            Iniciando sesión...
+          </span>
+        </button>
+
+        <!-- Enlace a registro -->
+        <div class="enlace-registro">
+          <p class="texto-registro">
+            ¿No te has registrado?
+            <button
+              type="button"
+              class="enlace-registro-boton"
+              (click)="irARegistro()"
+            >
+              Regístrate aquí
+            </button>
+          </p>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

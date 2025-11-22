@@ -1,0 +1,305 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Playwrite+DE+SAS&display=swap");
+
+.header {
+  background-color: #1a3b55;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Logo Styles
+.header-logo {
+  .logo-link {
+    font-family: "Pacifico", cursive;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-size: 1.7rem;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+      opacity: 0.95;
+    }
+  }
+}
+
+// Navigation Styles
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  .nav-link {
+    font-family: sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-decoration: none;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    background: none;
+    border: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #d4af37 0%, #f4e5b8 50%, #d4af37 100%);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover {
+      color: #f4e5b8;
+
+      &::after {
+        width: 100%;
+      }
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  // Diseño profesional para el perfil de usuario
+.user-profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+    }
+
+    .user-avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4af37 0%, #f4e5b8 100%);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+
+      i {
+        font-size: 1.5rem;
+        color: #1a1a1a;
+      }
+    }
+
+    .greeting-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.1rem;
+
+      .user-greeting {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1;
+      }
+
+      .user-name {
+        color: #ffffff;
+        font-weight: 500;
+        font-size: 0.9rem;
+        line-height: 1;
+      }
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      cursor: pointer;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+
+      i {
+        font-size: 1.25rem;
+      }
+
+      &:hover {
+        background: rgba(255, 107, 107, 0.15);
+        transform: scale(1.1);
+        color: #ff5252;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+// Hamburger Menu Button
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 22px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+
+  .hamburger-line {
+    width: 100%;
+    height: 3px;
+    background-color: #ffffff;
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+
+    &:nth-child(1).open {
+      transform: translateY(9.5px) rotate(45deg);
+    }
+
+    &:nth-child(2).open {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+
+    &:nth-child(3).open {
+      transform: translateY(-9.5px) rotate(-45deg);
+    }
+  }
+
+  &:hover .hamburger-line {
+    background-color: #f4e5b8;
+  }
+}
+
+// Animations
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .header-container {
+    padding: 1rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .header-logo .logo-link {
+    font-size: 1.5rem;
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  .header-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    order: 3;
+
+    &.open {
+      display: flex;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 0.875rem 0;
+      font-size: 1.125rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+      width: 100%;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    // <CHANGE> Ajustes responsive para el perfil de usuario
+    .user-profile {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 12px;
+      justify-content: flex-start;
+
+      .user-info {
+        .user-name {
+          max-width: none;
+        }
+      }
+    }
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 1rem;
+  }
+
+  .header-logo .logo-link {
+    font-size: 1.375rem;
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+    }
+  }
+}

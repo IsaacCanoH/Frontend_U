@@ -1,0 +1,103 @@
+/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/scss/bootstrap";
+@import 'ngx-toastr/toastr';
+@import 'ngx-toastr/toastr-bs5-alert';
+@import 'sweetalert2/dist/sweetalert2.min.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@import "mapbox-gl/dist/mapbox-gl.css";
+@import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #EAEDEF;
+  color: #1B1C1D;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Para que app-root ocupe todo el espacio */
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* El contenedor principal debe crecer */
+.main-content {
+  flex: 1 0 auto;
+}
+
+.text-primary {
+  color: #EB6D31 !important;
+}
+
+.bg-primary {
+  background-color: #EB6D31 !important;
+}
+
+.btn-primary {
+  background-color: #EB6D31;
+  border-color: #EB6D31;
+}
+
+.btn-primary:hover {
+  background-color: #d65e28;
+  border-color: #d65e28;
+}
+
+
+/* Estilos para las alertas personalizadas al validar documentos*/
+.alerta-custom .alerta-popup {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 24px;
+}
+
+.alerta-custom .alerta-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.alerta-custom .alerta-contenido {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Estilos para campos faltantes */
+.campos-contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+.campo-faltante {
+  background: #fff3cd;
+  color: #856404;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #ffeaa7;
+  font-weight: 500;
+  font-size: 13px;
+  display: inline-block;
+}
+
+/* Para errores, usar color rojo */
+.alerta-custom.swal2-icon-error .campo-faltante {
+  background: #fadbd8;
+  color: #78281f;
+  border-color: #f5b7b1;
+}

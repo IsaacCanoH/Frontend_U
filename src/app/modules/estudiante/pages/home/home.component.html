@@ -1,0 +1,253 @@
+<div class="propiedades-page">
+  <!-- Hero Carousel Section -->
+  <section class="hero-carousel">
+    <div class="carousel-container">
+      <div class="carousel-slides">
+        <div class="carousel-slide" [class.active]="currentSlide === 0">
+          <img src="/assets/car_1.png" alt="Hero 1" class="hero-image" />
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <h1 class="hero-title">Encuentra tu depa ideal</h1>
+            <p class="hero-subtitle">La mejor opción para estudiantes</p>
+          </div>
+        </div>
+
+        <div class="carousel-slide" [class.active]="currentSlide === 1">
+          <img src="/assets/car_2.png" alt="Hero 2" class="hero-image" />
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <h1 class="hero-title">UniRenta: Tu web, tu depa</h1>
+            <p class="hero-subtitle">
+              Conectamos estudiantes con su hogar perfecto
+            </p>
+          </div>
+        </div>
+
+        <div class="carousel-slide" [class.active]="currentSlide === 2">
+          <img src="/assets/car_3.png" alt="Hero 3" class="hero-image" />
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <h1 class="hero-title">Vive cerca de tu universidad</h1>
+            <p class="hero-subtitle">Miles de opciones esperándote</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carousel Indicators -->
+      <div class="carousel-indicators">
+        <button
+          *ngFor="let slide of [0, 1, 2]; let i = index"
+          [class.active]="currentSlide === i"
+          (click)="goToSlide(i)"
+          [attr.aria-label]="'Ir a slide ' + (i + 1)"
+        ></button>
+      </div>
+
+      <!-- Scroll Down Button -->
+      <button
+        class="scroll-down-btn"
+        (click)="scrollToSearch()"
+        aria-label="Buscar departamento"
+      >
+        <span class="scroll-text">Buscar departamento</span>
+        <i class="bi bi-chevron-down scroll-icon"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Search Bar Section -->
+  <div class="search-section" id="searchSection">
+    <div class="container">
+      <form (ngSubmit)="aplicarFiltros()" class="search-form">
+        <!-- Destino -->
+        <div class="search-bar">
+          <div class="search-field">
+            <label class="search-label">Destino</label>
+            <input
+              type="text"
+              class="search-input"
+              [(ngModel)]="colonia"
+              name="colonia"
+              placeholder="Buscar colonias"
+            />
+          </div>
+
+          <div class="search-divider"></div>
+
+          <!-- Municipio -->
+          <div class="search-field">
+            <label class="search-label">Municipio</label>
+            <input
+              type="text"
+              class="search-input"
+              [(ngModel)]="municipio"
+              name="municipio"
+              placeholder="Agregar municipio"
+            />
+          </div>
+
+          <div class="search-divider"></div>
+
+          <!-- Precio -->
+          <div class="search-field search-field-price">
+            <label class="search-label">Precio</label>
+            <div class="price-inputs">
+              <input
+                type="number"
+                class="search-input search-input-small"
+                [(ngModel)]="precioMin"
+                name="precioMin"
+                placeholder="Mín"
+                min="0"
+              />
+              <span class="price-separator">-</span>
+              <input
+                type="number"
+                class="search-input search-input-small"
+                [(ngModel)]="precioMax"
+                name="precioMax"
+                placeholder="Máx"
+                min="0"
+              />
+            </div>
+          </div>
+
+          <!-- Botón de limpiar mejorado dentro de la barra -->
+          <button
+            type="button"
+            class="clear-btn"
+            (click)="limpiarFiltros()"
+            [disabled]="cargando"
+            title="Limpiar filtros"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+
+          <!-- Search Button -->
+          <button type="submit" class="search-btn" [disabled]="cargando">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Resultados Section -->
+  <div class="container pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h5 class="results-title mb-0">
+        <i class="bi bi-house-door me-2"></i>Propiedades Disponibles
+        <span class="badge bg-primary ms-2">{{ propiedades.length }}</span>
+      </h5>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="cargando" class="text-center py-5">
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        style="width: 3rem; height: 3rem"
+      >
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-3 text-muted">Cargando propiedades...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !cargando" class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+    </div>
+
+    <!-- Grid de Propiedades -->
+    <div class="row g-3" *ngIf="!cargando && !error">
+      <div class="col-lg-4 col-md-6" *ngFor="let propiedad of propiedades">
+        <div class="card propiedad-card h-100 shadow-sm">
+          <div class="position-relative">
+            <img
+              [src]="propiedad.imagenes[0] || 'assets/default-property.jpg'"
+              class="card-img-top propiedad-img"
+              [alt]="propiedad.nombre"
+              onerror="this.src='assets/default-property.jpg'"
+            />
+            <span class="badge precio-badge">
+              ${{ propiedad.precio | number : "1.0-0" }}/mes
+            </span>
+          </div>
+
+          <div class="card-body d-flex flex-column p-3">
+            <h6 class="card-title mb-2">{{ propiedad.nombre }}</h6>
+
+            <p class="text-muted mb-2 small">
+              <i class="bi bi-geo-alt-fill text-primary me-1"></i>
+              {{ propiedad.ubicacion.colonia || "Ubicación no especificada" }}
+            </p>
+
+            <p class="card-text flex-grow-1 small">
+              {{
+                propiedad.descripcion.caracteristicas || "Propiedad disponible"
+              }}
+            </p>
+
+            <div
+              class="d-flex justify-content-between align-items-center border-top pt-2 mt-auto"
+            >
+              <div class="rentero-info">
+                <small class="text-muted">
+                  <i class="bi bi-person-circle me-1"></i>
+                  {{ propiedad.rentero.nombre }}
+                </small>
+              </div>
+
+              <div class="btn-group btn-group-sm" role="group">
+                <button
+                  class="btn btn-view"
+                  [routerLink]="['propiedad', propiedad.id]"
+                >
+                  <i class="bi bi-eye me-1"></i> Ver
+                </button>
+                <button
+                  class="btn btn-whatsapp"
+                  (click)="contactarRentero(propiedad.rentero.telefono)"
+                  [disabled]="!propiedad.rentero.telefono"
+                >
+                  <i class="bi bi-whatsapp"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div
+      *ngIf="!cargando && !error && propiedades.length === 0"
+      class="text-center py-5"
+    >
+      <i class="bi bi-house-x-fill text-muted" style="font-size: 3rem"></i>
+      <p class="text-muted mt-3">
+        No se encontraron propiedades con los filtros seleccionados
+      </p>
+      <button class="btn btn-primary btn-sm" (click)="limpiarFiltros()">
+        <i class="bi bi-arrow-clockwise me-2"></i>Ver todas las propiedades
+      </button>
+    </div>
+  </div>
+
+  <!-- Mapa de resultados -->
+  <div
+    class="container pb-5"
+    *ngIf="!cargando && !error && propiedades.length > 0"
+  >
+    <div class="card map-card shadow-sm">
+      <div class="card-header map-card-header">
+        <h5 class="map-title mb-0">Ubicación de las propiedades</h5>
+        <p class="map-subtitle mb-0">Explora las propiedades en el mapa</p>
+      </div>
+
+      <div class="map-card-body">
+        <app-mapa-busqueda [propiedades]="propiedades"></app-mapa-busqueda>
+      </div>
+    </div>
+  </div>
+</div>

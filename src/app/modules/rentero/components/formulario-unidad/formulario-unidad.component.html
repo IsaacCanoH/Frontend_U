@@ -1,0 +1,243 @@
+<div class="contenedor-formulario-unidad">
+  <!-- Contenedor de imagen izquierdo -->
+  <div class="contenedor-imagen">
+    <div class="overlay-imagen">
+      <h2 class="frase-animada">
+        {{ esEdicion ? "Actualiza tu unidad para maximizar ingresos" : "Registra una nueva unidad y maximiza tus
+        ingresos" }}
+      </h2>
+      <p class="descripcion-imagen">
+        Completa la información de tu unidad para atraer a los mejores inquilinos
+      </p>
+    </div>
+    <img src="/assets/fondo_fr.png" alt="Registro de Unidad" class="imagen-fondo" />
+  </div>
+
+  <!-- Contenedor de formulario derecho -->
+  <div class="contenedor-formulario">
+    <div class="tarjeta-registro">
+      <!-- Encabezado -->
+      <div class="encabezado-registro">
+        <!-- Botón volver -->
+        <button class="btn-volver" (click)="volverAPropiedades()">
+          <i class="bi bi-arrow-left"></i>
+          Volver a Propiedades
+        </button>
+
+        <!-- Icono -->
+        <i class="bi bi-door-open-fill icono-titulo"></i>
+
+        <!-- Título -->
+        <h2 class="titulo">
+          {{ esEdicion ? "Editar Unidad" : "Registrar Nueva Unidad" }}
+        </h2>
+
+        <!-- Subtítulo -->
+        <p class="subtitulo">
+          Propiedad: <strong>{{ propiedadNombre || 'Cargando...' }}</strong>
+        </p>
+      </div>
+
+      <!-- Formulario de unidad -->
+      <form [formGroup]="formularioUnidad" (ngSubmit)="guardarUnidad()" class="formulario-unidad">
+
+        <!-- Información básica -->
+        <div class="seccion-formulario">
+          <h3 class="titulo-seccion">
+            <i class="bi bi-info-circle"></i>
+            Información Básica
+          </h3>
+
+          <div class="fila-campos">
+            <!-- Campo nombre -->
+            <div class="grupo-campo">
+              <label for="nombre" class="etiqueta">
+                <i class="bi bi-tag"></i>
+                Nombre de la Unidad
+              </label>
+              <input id="nombre" formControlName="nombre" type="text" class="campo-entrada"
+                [class.invalido]="esCampoInvalido('nombre')" placeholder="Ej. Habitación Principal, Estudio A1" />
+              <div class="mensaje-error" *ngIf="esCampoInvalido('nombre')">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span>{{ obtenerMensajeError('nombre') }}</span>
+              </div>
+            </div>
+
+            <!-- Campo precio -->
+            <div class="grupo-campo">
+              <label for="precio" class="etiqueta">
+                <i class="bi bi-currency-dollar"></i>
+                Precio Mensual
+              </label>
+              <input id="precio" formControlName="precio" type="number" min="1" step="0.01" class="campo-entrada"
+                [class.invalido]="esCampoInvalido('precio')" placeholder="Ej. 5000.00" />
+              <div class="mensaje-error" *ngIf="esCampoInvalido('precio')">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span>{{ obtenerMensajeError('precio') }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Características -->
+        <div class="seccion-formulario">
+          <h3 class="titulo-seccion">
+            <i class="bi bi-house"></i>
+            Características
+          </h3>
+
+          <div class="fila-campos">
+            <!-- Terraza -->
+            <div class="grupo-campo checkbox-campo">
+              <label for="terraza" class="checkbox-label">
+                <input id="terraza" formControlName="terraza" type="checkbox" />
+                <span class="checkmark"></span>
+                <i class="bi bi-tree"></i>
+                Tiene Terraza
+              </label>
+            </div>
+
+            <!-- Amueblado -->
+            <div class="grupo-campo checkbox-campo">
+              <label for="amueblado" class="checkbox-label">
+                <input id="amueblado" formControlName="amueblado" type="checkbox" />
+                <span class="checkmark"></span>
+                <i class="bi bi-house-gear"></i>
+                Amueblado
+              </label>
+            </div>
+          </div>
+
+          <!-- Características adicionales -->
+          <div class="grupo-campo">
+            <label for="caracteristicas" class="etiqueta">
+              <i class="bi bi-card-text"></i>
+              Características Adicionales
+            </label>
+            <textarea id="caracteristicas" formControlName="caracteristicas" class="campo-entrada" rows="3"
+              placeholder="Describe otras características de la unidad...">
+            </textarea>
+          </div>
+        </div>
+
+        <!-- Servicios incluidos -->
+        <div class="seccion-formulario">
+          <h3 class="titulo-seccion">
+            <i class="bi bi-gear"></i>
+            Servicios Incluidos
+          </h3>
+
+          <div class="servicios-grid">
+            <label *ngFor="let servicio of serviciosDisponibles" class="servicio-item"
+              [class.seleccionado]="isServicioSeleccionado(servicio)">
+              <input type="checkbox" [checked]="isServicioSeleccionado(servicio)" (change)="toggleServicio(servicio)">
+              <span class="servicio-content">
+                <i class="bi bi-droplet" *ngIf="servicio === 'Agua'"></i>
+                <i class="bi bi-lightning" *ngIf="servicio === 'Luz'"></i>
+                <i class="bi bi-fire" *ngIf="servicio === 'Gas'"></i>
+                <i class="bi bi-wifi" *ngIf="servicio === 'Internet'"></i>
+                <i class="bi bi-tv" *ngIf="servicio === 'Cable'"></i>
+                <i class="bi bi-broom" *ngIf="servicio === 'Limpieza'"></i>
+                <i class="bi bi-shield-check" *ngIf="servicio === 'Seguridad'"></i>
+                <i class="bi bi-car-front" *ngIf="servicio === 'Estacionamiento'"></i>
+                <i class="bi bi-shop" *ngIf="servicio === 'Lavandería'"></i>
+                {{ servicio }}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Imágenes de la unidad -->
+        <div class="seccion-formulario">
+          <h3 class="titulo-seccion">
+            <i class="bi bi-images"></i>
+            Imágenes de la Unidad
+          </h3>
+
+          <!-- Información sobre archivos permitidos -->
+          <div class="info-archivos">
+            <div class="info-item">
+              <i class="bi bi-info-circle"></i>
+              <span>Formatos: JPG, PNG, WebP</span>
+            </div>
+            <div class="info-item">
+              <i class="bi bi-file-earmark"></i>
+              <span>Máximo: {{ maxTamanoMB }}MB por imagen</span>
+            </div>
+          </div>
+
+          <!-- Input de archivo -->
+          <div class="grupo-campo">
+            <label for="imagenes" class="etiqueta">
+              <i class="bi bi-cloud-upload"></i>
+              Seleccionar Imágenes
+            </label>
+            <input id="imagenes" type="file" (change)="onImagenesSeleccionadas($event)"
+              accept="image/jpeg,image/jpg,image/png,image/webp" multiple class="input-archivo"
+              [disabled]="procesando" />
+            <div class="archivo-info" *ngIf="imagenesSeleccionadas.length > 0">
+              <i class="bi bi-file-check"></i>
+              <span>{{ textoBotonImagenes }}</span>
+            </div>
+          </div>
+
+          <!-- Previsualización de imágenes -->
+          <div class="imagenes-preview" *ngIf="hayImagenes">
+            <div class="imagenes-header">
+              <h4>
+                <i class="bi bi-images"></i>
+                Vista previa ({{ urlsPreview.length }})
+              </h4>
+            </div>
+            <div class="imagenes-grid">
+              <div *ngFor="let url of urlsPreview; let i = index" class="imagen-item">
+                <div class="imagen-container">
+                  <img [src]="url" [alt]="'Imagen ' + (i + 1)" class="imagen-preview" />
+                  <div class="imagen-overlay">
+                    <button type="button" (click)="eliminarImagen(i)" class="boton-eliminar-imagen"
+                      title="Eliminar imagen">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="imagen-info">
+                  <span class="imagen-numero">
+                    {{ imagenesSeleccionadas[i] && imagenesSeleccionadas[i].name || 'Imagen ' + (i + 1) }}
+                  </span>
+                  <span class="imagen-tamano" *ngIf="imagenesSeleccionadas[i]">
+                    {{ (imagenesSeleccionadas[i].size / 1024).toFixed(0) }} KB
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensaje si no hay imágenes -->
+          <div class="sin-imagenes" *ngIf="!hayImagenes">
+            <i class="bi bi-image"></i>
+            <small>Las imágenes ayudan a mostrar mejor tu unidad</small>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="grupo-botones">
+          <button type="button" (click)="cancelar()" class="boton boton-secundario" [disabled]="procesando">
+            <i class="bi bi-x-lg"></i>
+            Cancelar
+          </button>
+
+          <button type="submit" [disabled]="!formularioUnidad.valid || procesando" class="boton boton-primario">
+            <span *ngIf="!procesando">
+              <i class="bi bi-check-lg"></i>
+              {{ esEdicion ? 'Actualizar' : 'Registrar' }} Unidad
+            </span>
+            <span *ngIf="procesando">
+              <i class="bi bi-hourglass-split"></i>
+              Procesando...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

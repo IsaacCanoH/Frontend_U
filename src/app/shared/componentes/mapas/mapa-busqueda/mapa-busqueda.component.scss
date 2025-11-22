@@ -1,0 +1,186 @@
+.mapa-busqueda {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+
+  .loader-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, 0.75);
+    pointer-events: all;
+  }
+}
+
+.earth-loader {
+  --watercolor: #3344c1;
+  --landcolor: #7cc133;
+  width: 7.5em;
+  height: 7.5em;
+  background-color: var(--watercolor, #3344c1);
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: inset 0 0.5em rgb(255 255 255 / 25%), inset 0 -0.5em rgb(0 0 0 / 25%);
+  border: 0.15em solid #fff;
+  animation: startround 0.3s 1;
+}
+
+.earth p {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5em;
+  font-size: 1.05em;
+  font-family: sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.earth-loader svg:nth-child(1) {
+  position: absolute;
+  bottom: -2em;
+  width: 7em;
+  height: auto;
+  animation: round1 5s infinite linear 0.75s;
+}
+.earth-loader svg:nth-child(2) {
+  position: absolute;
+  top: -3em;
+  width: 7em;
+  height: auto;
+  animation: round1 5s infinite linear;
+}
+.earth-loader svg:nth-child(3) {
+  position: absolute;
+  top: -2.5em;
+  width: 7em;
+  height: auto;
+  animation: round2 5s infinite linear;
+}
+.earth-loader svg:nth-child(4) {
+  position: absolute;
+  bottom: -2.2em;
+  width: 7em;
+  height: auto;
+  animation: round2 5s infinite linear 0.75s;
+}
+
+@keyframes startround {
+  0%, 60% { filter: brightness(130%); box-shadow: none; }
+  100% { filter: brightness(100%); box-shadow: inset 0 0.5em rgb(255 255 255 / 25%), inset 0 -0.5em rgb(0 0 0 / 25%); }
+}
+@keyframes round1 {
+  0% { left: -2em; opacity: 100%; transform: skewX(0) rotate(0); }
+  30% { left: -6em; opacity: 100%; transform: skewX(-25deg) rotate(25deg); }
+  31% { left: -6em; opacity: 0%; transform: skewX(-25deg) rotate(25deg); }
+  35% { left: 7em; opacity: 0%; transform: skewX(25deg) rotate(-25deg); }
+  45% { left: 7em; opacity: 100%; transform: skewX(25deg) rotate(-25deg); }
+  100% { left: -2em; opacity: 100%; transform: skewX(0) rotate(0); }
+}
+@keyframes round2 {
+  0% { left: 5em; opacity: 100%; transform: skewX(0) rotate(0); }
+  75% { left: -7em; opacity: 100%; transform: skewX(-25deg) rotate(25deg); }
+  76% { left: -7em; opacity: 0%; transform: skewX(-25deg) rotate(25deg); }
+  77% { left: 8em; opacity: 0%; transform: skewX(25deg) rotate(-25deg); }
+  80% { left: 8em; opacity: 100%; transform: skewX(25deg) rotate(-25deg); }
+  100% { left: 5em; opacity: 100%; transform: skewX(0) rotate(0); }
+}
+
+.mapboxgl-marker { cursor: pointer; }
+.mapboxgl-marker.has-badge { will-change: transform; }
+.mapboxgl-marker.has-badge::after {
+  content: attr(data-count);
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9999px;
+  background: #ef4444;
+  color: #fff;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  transform: translate(20%, -20%);
+}
+.marker-home {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: #2563eb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.marker-home::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000' d='M12 3.172 2.293 12.88a1 1 0 1 0 1.414 1.415L5 13.002V20a1 1 0 0 0 1 1h5v-5h2v5h5a1 1 0 0 0 1-1v-6l1.293 1.293a1 1 0 0 0 1.414-1.415L12 3.172z'/></svg>") center/contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000' d='M12 3.172 2.293 12.88a1 1 0 1 0 1.414 1.415L5 13.002V20a1 1 0 0 0 1 1h5v-5h2v5h5a1 1 0 0 0 1-1v-6l1.293 1.293a1 1 0 0 0 1.414-1.415L12 3.172z'/></svg>") center/contain no-repeat;
+}
+.mapboxgl-marker.has-badge.marker-home { background: #1f2937; }
+
+.mapboxgl-popup.prop-popup { z-index: 10; }
+.mapboxgl-popup.prop-popup .mapboxgl-popup-content {
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  width: 260px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.mapboxgl-popup.prop-popup .mapboxgl-popup-tip { border-top-color: #fff; }
+
+.pp-card { display: grid; grid-template-columns: 96px 1fr; min-height: 96px; }
+.pp-media { background-size: cover; background-position: center; }
+.pp-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.pp-title { font-weight: 700; font-size: 14px; color: #111827; line-height: 1.2; }
+.pp-price { font-weight: 800; color: #10b981; font-size: 15px; }
+.pp-link { margin-top: 4px; align-self: flex-start; font-size: 12px; color: #2563eb; text-decoration: none; font-weight: 600; }
+.pp-link:hover { text-decoration: underline; }
+
+.pp-list { max-height: 220px; overflow: auto; }
+.pp-list ul { list-style: none; margin: 0; padding: 8px 0; }
+.pp-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; }
+.pp-item + .pp-item { border-top: 1px solid #f1f5f9; }
+.pp-item-title { font-weight: 600; font-size: 13px; color: #111827; }
+.pp-item-price { font-weight: 800; font-size: 13px; color: #10b981; white-space: nowrap; }
+.pp-more { padding: 8px 12px; font-size: 12px; color: #6b7280; border-top: 1px solid #f1f5f9; }
+
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-content { margin-top: 6px; }
+
+.marker-uni {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #7c3aed;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.marker-uni::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000' d='M12 3 1 8l11 5 9-4.091V17h2V8L12 3Zm-5 9.236V15c0 1.657 2.91 3 5 3s5-1.343 5-3v-2.764L12 15 7 12.236Z'/></svg>") center/contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000' d='M12 3 1 8l11 5 9-4.091V17h2V8L12 3Zm-5 9.236V15c0 1.657 2.91 3 5 3s5-1.343 5-3v-2.764L12 15 7 12.236Z'/></svg>") center/contain no-repeat;
+}
+.marker-uni:hover { filter: brightness(0.95); transform: translateY(-1px); }

@@ -1,0 +1,111 @@
+.mapa-detalle {
+  width: 100%;
+  height: 370px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+
+  .btn-ruta {
+    position: absolute;
+    right: 20px;
+    bottom: 50px;
+    z-index: 3;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    font-weight: 600;
+    padding: 0.5rem 0.875rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform .2s ease-in-out;
+
+    i { font-size: 1.2rem; }
+    &:hover { transform: scale(1.05); }
+  }
+
+  .loader-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    background: rgba(10,10,51,.75);
+    pointer-events: all;
+  }
+  .loader-overlay.dimmed { background: rgba(10,10,51,.75); }
+}
+
+.earth-loader {
+  --watercolor: #3344c1;
+  --landcolor: #7cc133;
+  width: 7.5em;
+  height: 7.5em;
+  background-color: var(--watercolor);
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: inset 0 .5em rgb(255 255 255 / 25%), inset 0 -.5em rgb(0 0 0 / 25%);
+  border: .15em solid #fff;
+  animation: startround .3s 1;
+}
+.earth p {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: .5em;
+  font-size: 1.05em;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.earth-loader svg:nth-child(1){ position:absolute; bottom:-2em; width:7em; height:auto; animation:round1 5s infinite linear .75s; }
+.earth-loader svg:nth-child(2){ position:absolute; top:-3em;  width:7em; height:auto; animation:round1 5s infinite linear; }
+.earth-loader svg:nth-child(3){ position:absolute; top:-2.5em;width:7em; height:auto; animation:round2 5s infinite linear; }
+.earth-loader svg:nth-child(4){ position:absolute; bottom:-2.2em;width:7em; height:auto; animation:round2 5s infinite linear .75s; }
+
+@keyframes startround {
+  0%,60% { filter: brightness(130%); box-shadow: none; }
+  100% { filter: brightness(100%); box-shadow: inset 0 .5em rgb(255 255 255 / 25%), inset 0 -.5em rgb(0 0 0 / 25%); }
+}
+@keyframes round1 {
+  0% { left:-2em; opacity:1; transform:skewX(0) rotate(0); }
+  30%{ left:-6em; opacity:1; transform:skewX(-25deg) rotate(25deg); }
+  31%{ left:-6em; opacity:0; transform:skewX(-25deg) rotate(25deg); }
+  35%{ left:7em;  opacity:0; transform:skewX(25deg) rotate(-25deg); }
+  45%{ left:7em;  opacity:1; transform:skewX(25deg) rotate(-25deg); }
+  100%{ left:-2em; opacity:1; transform:skewX(0) rotate(0); }
+}
+@keyframes round2 {
+  0% { left:5em; opacity:1; transform:skewX(0) rotate(0); }
+  75%{ left:-7em;opacity:1; transform:skewX(-25deg) rotate(25deg); }
+  76%{ left:-7em;opacity:0; transform:skewX(-25deg) rotate(25deg); }
+  77%{ left:8em; opacity:0; transform:skewX(25deg) rotate(-25deg); }
+  80%{ left:8em; opacity:1; transform:skewX(25deg) rotate(-25deg); }
+  100%{ left:5em; opacity:1; transform:skewX(0) rotate(0); }
+}
+
+:host ::ng-deep .mapboxgl-marker { cursor: pointer; }
+
+:host ::ng-deep .marker-home {
+  width: 42px; height: 42px; border-radius: 9999px; background: #2563eb;
+  box-shadow: 0 4px 10px rgba(0,0,0,.25); display:flex; align-items:center; justify-content:center;
+}
+:host ::ng-deep .marker-home::before {
+  content: ""; width: 24px; height: 24px; background:#fff;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000' d='M12 3.172 2.293 12.88a1 1 0 1 0 1.414 1.415L5 13.002V20a1 1 0 0 0 1 1h5v-5h2v5h5a1 1 0 0 0 1-1v-6l1.293 1.293a1 1 0 0 0 1.414-1.415L12 3.172z'/></svg>") center/contain no-repeat;
+  mask:         url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000' d='M12 3.172 2.293 12.88a1 1 0 1 0 1.414 1.415L5 13.002V20a1 1 0 0 0 1 1h5v-5h2v5h5a1 1 0 0 0 1-1v-6l1.293 1.293a1 1 0 0 0 1.414-1.415L12 3.172z'/></svg>") center/contain no-repeat;
+}
+
+:host ::ng-deep .marker-user {
+  width: 40px; height: 40px; border-radius: 9999px; background:#455c8e; border:2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center;
+}
+:host ::ng-deep .marker-user::before {
+  content: ""; width:22px; height:22px; background:#fff;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000' d='M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.2 0-8 1.6-8 4v2h16v-2c0-2.4-4.8-4-8-4z'/></svg>") center/contain no-repeat;
+  mask:         url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000' d='M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.2 0-8 1.6-8 4v2h16v-2c0-2.4-4.8-4-8-4z'/></svg>") center/contain no-repeat;
+}

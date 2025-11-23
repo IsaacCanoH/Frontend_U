@@ -11,8 +11,7 @@ export class ServiciosService {
   obtenerServiciosDisponibles(soloAdicionales = false): Observable<any> {
     const params = soloAdicionales ? new HttpParams().set('solo_adicionales', 'true') : undefined;
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}`
     });
     return this.http.get<any>(`${this.apiUrl}/disponibles`, { params, headers });
   }

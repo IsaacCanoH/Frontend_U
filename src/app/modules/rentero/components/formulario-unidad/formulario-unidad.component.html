@@ -199,39 +199,43 @@
             Servicios Incluidos
           </h3>
 
+          <h6 class="subtitulo">Servicios Bases (Incluidos en Precio Mensual)</h6>
+
           <div class="servicios-grid">
             <label
-              *ngFor="let s of serviciosBase"
+              *ngFor="let servicio of serviciosBase"
               class="servicio-item"
-              [class.seleccionado]="isServicioSeleccionado(servicio)"
+              [class.seleccionado]="isServicioSeleccionado(servicio.id)"
             >
               <input
                 type="checkbox"
-                [checked]="true"
+                [checked]="isServicioSeleccionado(servicio.id)"
+                (change)="toggleServicio(servicio.id)"
               />
               <span class="servicio-content">
-                {{ s.nombre }}
+                {{ servicio.nombre }}
               </span>
             </label>
           </div>
 
+          <h6 class="subtitulo">Servicios extras</h6>
+
           <div class="servicios-grid">
             <label
-              *ngFor="let s of serviciosExtras"
+              *ngFor="let servicio of serviciosExtras"
               class="servicio-item"
-              [class.seleccionado]="isServicioSeleccionado(servicio)"
+              [class.seleccionado]="isServicioSeleccionado(servicio.id)"
             >
               <input
                 type="checkbox"
-                [checked]="isServicioSeleccionado(s.id)"
-                 (change)="toggleServicio(s.id)" 
+                [checked]="isServicioSeleccionado(servicio.id)"
+                (change)="toggleServicio(servicio.id)"
               />
               <span class="servicio-content">
-                {{ s.nombre }} ${{ s.precio | number:'1.0-2' }}
+                {{ servicio.nombre }} ${{ servicio.precio | number : "1.0-2" }} /mes
               </span>
             </label>
           </div>
-
         </div>
 
         <!-- Imágenes de la unidad -->

@@ -147,6 +147,12 @@ $color-borde: #d1d5db;
         font-size: 1.1rem;
       }
     }
+
+    .subtitulo {
+      font-size: 0.9rem;
+      align-items: center;
+      display: flex;
+    }
   }
 }
 
@@ -160,6 +166,7 @@ $color-borde: #d1d5db;
     grid-template-columns: 1fr;
   }
 }
+
 
 .grupo-campo {
   .etiqueta {

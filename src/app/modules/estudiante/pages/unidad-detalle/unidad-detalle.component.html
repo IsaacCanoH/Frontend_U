@@ -78,21 +78,21 @@
 
       <!-- Servicios extras (seleccionables por el estudiante) -->
       <div
-        class="card services-card"
+        class="card services-card extras-section"
         *ngIf="unidad.descripcion?.servicios?.length"
       >
         <div class="card-content">
           <div class="section-header">
             <div class="section-icon">
-              <i class="fas fa-star"></i>
+              <i class="fas fa-plus-circle"></i>
             </div>
             <h2 class="section-title">Servicios extras</h2>
           </div>
 
-          <div class="services-grid">
+          <div class="services-grid-extras">
             <!-- Servicio extra: item clicable entero -->
             <div
-              class="service-item"
+              class="service-item-extra"
               *ngFor="let s of serviciosExtras"
               role="button"
               tabindex="0"
@@ -100,33 +100,38 @@
               (keydown.enter)="toggleExtra(s.id)"
               (keydown.space)="toggleExtra(s.id)"
               [attr.aria-pressed]="isExtraSelected(s.id)"
+              [class.selected]="isExtraSelected(s.id)"
             >
-              <div class="service-icon">
-                <!-- mostrar check sólo si está seleccionado -->
-                <i class="fas fa-check" *ngIf="isExtraSelected(s.id)"></i>
+              <div class="service-selection-indicator">
+                <div class="checkbox-custom">
+                  <i class="fas fa-check" *ngIf="isExtraSelected(s.id)"></i>
+                </div>
               </div>
 
-              <span class="service-name">{{ s.nombre | titlecase }}</span>
-
-              <span
-                class="service-price"
-                *ngIf="s.precio !== undefined && s.precio !== null"
-              >
-                ${{ s.precio | number : "1.0-2" }} /mes
-              </span>
+              <div class="service-content-extra">
+                <span class="service-name-extra">{{ s.nombre | titlecase }}</span>
+                <span
+                  class="service-price-extra"
+                  *ngIf="s.precio !== undefined && s.precio !== null"
+                >
+                  ${{ s.precio | number : "1.0-2" }} /mes
+                </span>
+              </div>
             </div>
 
-            <div *ngIf="serviciosExtras.length === 0" class="empty">
-              No hay servicios extras
+            <div *ngIf="serviciosExtras.length === 0" class="empty-state">
+              <i class="fas fa-info-circle"></i>
+              <p>No hay servicios extras disponibles</p>
             </div>
           </div>
-          <div class="actions-extras" style="margin-top: 1rem">
-            <button
-              class="button2"
-              *ngIf="!isProcessingExtras && (serviciosSeleccionadosExtras?.length ?? 0) > 0"
 
+          <div class="actions-extras-container">
+            <button
+              class="button-primary"
+              *ngIf="!isProcessingExtras && (serviciosSeleccionadosExtras?.length ?? 0) > 0"
               (click)="applySelectedExtras()"
             >
+              <i class="fas fa-check-circle"></i>
               {{
                 assignedServices.length === 0
                   ? "Adquirir Servicios"
@@ -134,7 +139,8 @@
               }}
             </button>
 
-            <button class="button2" disabled *ngIf="isProcessingExtras">
+            <button class="button-primary loading" disabled *ngIf="isProcessingExtras">
+              <i class="fas fa-spinner fa-spin"></i>
               Procesando...
             </button>
           </div>

@@ -205,7 +205,9 @@ export class FormularioUnidadComponent implements OnInit, OnDestroy {
       // campos de compartido (si vienen)
     });
 
-    this.serviciosSeleccionados = (unidad.descripcion?.servicios || []).map((s: any) => Number(s)).filter((n: number) => !isNaN(n));
+    this.serviciosSeleccionados = (unidad.descripcion?.servicios || [])
+      .map((s: any) => (typeof s === 'object' ? s.id : Number(s)))
+      .filter((n: number) => !isNaN(n));
 
     // Cargar imágenes existentes como URLs de preview
     if (unidad.imagenes && unidad.imagenes.length > 0) {
@@ -425,10 +427,15 @@ export class FormularioUnidadComponent implements OnInit, OnDestroy {
         imagenesBase64 = await this.convertirImagenesABase64();
       }
 
+      const serviciosObj = this.serviciosSeleccionados
+        .map(id => this.serviciosCatalogo.find((s: any) => Number(s.id) === Number(id)))
+        .filter((s: any) => !!s)
+        .map((s: any) => ({ id: s.id, nombre: s.nombre, precio: s.precio, es_base: !!s.es_base }));
+
       const descripcion: any = {
         terraza: !!formValue.terraza,
         amueblado: !!formValue.amueblado,
-        servicios: this.serviciosSeleccionados,
+        servicios: serviciosObj,
         caracteristicas: formValue.caracteristicas || ''
       };
 

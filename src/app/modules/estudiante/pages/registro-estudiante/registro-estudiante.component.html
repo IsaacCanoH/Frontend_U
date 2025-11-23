@@ -1,0 +1,217 @@
+<div class="contenedor-registro">
+  <!-- Contenedor de imagen izquierdo -->
+  <div class="contenedor-imagen">
+    <div class="overlay-imagen">
+      <h2 class="frase-animada">
+        Únete a nosotros
+      </h2>
+    </div>
+    <img src="/assets/fondo.png" alt="Registro" class="imagen-fondo" />
+  </div>
+
+  <!-- Contenedor de formulario derecho -->
+  <div class="contenedor-formulario">
+    <div class="tarjeta-registro">
+      <!-- Encabezado -->
+      <div class="encabezado-registro">
+        <i class="bi bi-mortarboard-fill icono-titulo"></i>
+        <h2 class="titulo">Formulario de registro</h2>
+        <p class="subtitulo">Completa tu información para comenzar</p>
+      </div>
+
+      <!-- Formulario de datos personales -->
+      <form
+        [formGroup]="formulario"
+        (ngSubmit)="registrar()"
+        class="formulario-paso"
+      >
+        <div class="fila-campos">
+          <div class="grupo-campo">
+            <label for="nombre" class="etiqueta">
+              <i class="bi bi-person"></i>
+              Nombre
+            </label>
+            <input
+              id="nombre"
+              formControlName="nombre"
+              type="text"
+              class="campo-entrada"
+              [class.invalido]="
+                formulario.get('nombre')?.invalid &&
+                formulario.get('nombre')?.touched
+              "
+              placeholder="Juan"
+            />
+            <div
+              class="mensaje-error"
+              *ngIf="
+                formulario.get('nombre')?.invalid &&
+                formulario.get('nombre')?.touched
+              "
+            >
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <span>{{ obtenerMensajeError("nombre") }}</span>
+            </div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="apellido" class="etiqueta">
+              <i class="bi bi-person"></i>
+              Apellidos
+            </label>
+            <input
+              id="apellido"
+              formControlName="apellido"
+              type="text"
+              class="campo-entrada"
+              [class.invalido]="
+                formulario.get('apellido')?.invalid &&
+                formulario.get('apellido')?.touched
+              "
+              placeholder="Pérez"
+            />
+            <div
+              class="mensaje-error"
+              *ngIf="
+                formulario.get('apellido')?.invalid &&
+                formulario.get('apellido')?.touched
+              "
+            >
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <span>{{ obtenerMensajeError("apellido") }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="fila-campos">
+          <div class="grupo-campo">
+            <label for="telefono" class="etiqueta">
+              <i class="bi bi-telephone"></i>
+              Teléfono
+            </label>
+            <input
+              id="telefono"
+              formControlName="telefono"
+              type="tel"
+              class="campo-entrada"
+              [class.invalido]="
+                formulario.get('telefono')?.invalid &&
+                formulario.get('telefono')?.touched
+              "
+              placeholder="4611234567"
+            />
+            <div
+              class="mensaje-error"
+              *ngIf="
+                formulario.get('telefono')?.invalid &&
+                formulario.get('telefono')?.touched
+              "
+            >
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <span>{{ obtenerMensajeError("telefono") }}</span>
+            </div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="email" class="etiqueta">
+              <i class="bi bi-envelope"></i>
+              Correo electrónico
+            </label>
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              class="campo-entrada"
+              [class.invalido]="
+                formulario.get('email')?.invalid &&
+                formulario.get('email')?.touched
+              "
+              placeholder="ejemplo@correo.com"
+            />
+            <div
+              class="mensaje-error"
+              *ngIf="
+                formulario.get('email')?.invalid &&
+                formulario.get('email')?.touched
+              "
+            >
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <span>{{ obtenerMensajeError("email") }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grupo-campo">
+          <label for="password" class="etiqueta">
+            <i class="bi bi-lock"></i>
+            Contraseña
+          </label>
+          <div class="campo-password">
+            <input
+              id="password"
+              formControlName="password"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              class="campo-entrada"
+              [class.invalido]="
+                formulario.get('password')?.invalid &&
+                formulario.get('password')?.touched
+              "
+              placeholder="Mínimo 6 caracteres"
+            />
+            <button
+              type="button"
+              class="boton-toggle-password"
+              (click)="mostrarPassword = !mostrarPassword"
+              tabindex="-1"
+            >
+              <i
+                class="bi"
+                [class.bi-eye]="!mostrarPassword"
+                [class.bi-eye-slash]="mostrarPassword"
+              ></i>
+            </button>
+          </div>
+          <div
+            class="mensaje-error"
+            *ngIf="
+              formulario.get('password')?.invalid &&
+              formulario.get('password')?.touched
+            "
+          >
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <span>{{ obtenerMensajeError("password") }}</span>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="!datosValidos || procesando"
+          class="boton boton-primario"
+        >
+          <span *ngIf="!procesando">
+            Registrar
+            <i class="bi bi-check-lg"></i>
+          </span>
+          <span *ngIf="procesando" class="contenedor-carga">
+            <div class="spinner"></div>
+            Registrando...
+          </span>
+        </button>
+
+        <!-- Enlace a login -->
+        <div class="enlace-login">
+          <p class="texto-login">
+            ¿Ya tienes una cuenta?
+            <button
+              type="button"
+              class="enlace-login-boton"
+              (click)="irALogin()"
+            >
+              Inicia sesión aquí
+            </button>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

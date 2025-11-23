@@ -1,0 +1,139 @@
+<div class="main-container" *ngIf="!cargando && unidad">
+
+  <!-- Header -->
+  <div class="detail-header">
+    <h1 class="detail-title">
+      <span class="title-text">{{ unidad.nombre }}</span>
+    </h1>
+    <div class="header-meta">
+      <div class="property-location">
+        <div class="location-icon-wrapper">
+          <i class="fas fa-house"></i>
+        </div>
+        <span>
+          <strong>{{ unidad.propiedad.nombre }}</strong> 
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid principal -->
+  <div class="content-grid">
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <!-- Galería -->
+      <div class="gallery-card" *ngIf="unidad.imagenes?.length">
+        <div class="gallery-main">
+          <img 
+            [src]="unidad.imagenes?.[0] || '/assets/default-property.jpg'" 
+            alt="{{unidad.nombre}}"
+            class="main-image"
+          >
+          <div class="gallery-overlay"></div>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="card description-card" *ngIf="unidad.descripcion?.caracteristicas">
+        <div class="card-content">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <h2 class="section-title">Descripción</h2>
+          </div>
+          <div class="description">
+            <p class="description-paragraph">
+              <span class="paragraph-decorator"></span>
+              {{ unidad.descripcion.caracteristicas }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servicios -->
+      <div class="card services-card" *ngIf="unidad.descripcion?.servicios?.length">
+        <div class="card-content">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h2 class="section-title">Servicios incluidos</h2>
+          </div>
+          <div class="services-grid">
+            <div class="service-item" *ngFor="let s of unidad.descripcion.servicios">
+              <div class="service-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <span>{{ s | titlecase }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-sticky">
+        <!-- Precio -->
+        <div class="card pricing-card">
+          <div class="pricing-top-bar"></div>
+          <div class="card-content">
+            <div class="pricing-section">
+              <div class="price-badge">Precio</div>
+              <div class="price-main">
+                <span class="price-amount">${{ unidad.precio | number:'1.0-0' }}</span>
+                <span class="price-period">/mes</span>
+              </div>
+            </div>
+
+            <!-- Rentero Info -->
+            <div class="rentero-section" *ngIf="unidad.rentero">
+              <div class="section-header compact">
+                <div class="section-icon">
+                  <i class="fas fa-user-circle"></i>
+                </div>
+                <h3 class="section-title">Rentero</h3>
+              </div>
+
+              <div class="host-profile">
+                <div class="host-avatar">
+                  <img 
+                    src="/assets/avatar-default.png" 
+                    alt="Rentero"
+                    class="avatar-image"
+                  >
+                </div>
+
+                <div class="host-info">
+                  <h4 class="host-name">{{ unidad.rentero.nombre }}</h4>
+                  
+                  <div class="contact-info">
+                    <div class="contact-item">
+                      <i class="fas fa-phone-alt"></i>
+                      <span>{{ unidad.rentero.telefono }}</span>
+                    </div>
+                    <div class="contact-item">
+                      <i class="fas fa-envelope"></i>
+                      <span>{{ unidad.rentero.email }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <button class="btn-contact">
+              <i class="fas fa-envelope"></i>
+              Contactar Rentero
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="cargando" class="loading-container">
+  <div class="spinner"></div>
+  <p class="loading-text">Cargando detalles...</p>
+</div>

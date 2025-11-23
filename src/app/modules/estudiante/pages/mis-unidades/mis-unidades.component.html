@@ -1,0 +1,67 @@
+<div class="main-container" *ngIf="!cargando; else cargandoTpl">
+  <!-- Header elegante -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <span class="title-text">Mis Unidades</span>
+      </h1>
+      <p class="header-subtitle">Visualiza tus unidades alquiladas</p>
+    </div>
+  </div>
+
+  <!-- Contenedor de unidades -->
+  <div class="units-container">
+    <!-- Grid de tarjetas -->
+    <div class="units-grid" *ngIf="unidades.length > 0">
+      <div class="unit-card" *ngFor="let u of unidades; let i = index" [style.animation-delay]="(i * 0.05) + 's'">
+        <div class="card-image-wrapper">
+          <img 
+            class="card-image" 
+            [src]="u.imagenes?.[0] || '/assets/default-property.jpg'" 
+            alt="{{u.nombre}}"
+            loading="lazy"
+          >
+          <div class="image-overlay"></div>
+        </div>
+        
+        <div class="card-content">
+          <h3 class="card-title">{{ u.nombre }}</h3>
+          <p class="card-location">
+            <i class="fas fa-house"></i>
+            {{ u.propiedad?.nombre || 'Ubicación no especificada' }}
+          </p>
+          
+          <div class="card-footer">
+            <div class="price-section">
+              <span class="price-label">Precio</span>
+              <span class="price-value">${{ u.precio | number:'1.0-0' }} <span class="price-period">/mes</span> </span> 
+              
+            </div>
+            <button class="btn-details" (click)="verDetalle(u.id)">
+              Ver detalles
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado vacío elegante -->
+    <div class="empty-state" *ngIf="unidades.length === 0">
+      <div class="empty-icon-wrapper">
+        <i class="fas fa-building"></i>
+      </div>
+      <h2 class="empty-title">No tienes unidades asignadas</h2>
+      <p class="empty-description">
+        Aún no hay propiedades registradas en tu cuenta. Comienza agregando tu primera unidad para comenzar a gestionar tus alquileres.
+      </p>
+    </div>
+  </div>
+</div>
+
+<ng-template #cargandoTpl>
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p class="loading-text">Cargando tus unidades...</p>
+  </div>
+</ng-template>

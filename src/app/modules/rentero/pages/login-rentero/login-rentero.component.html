@@ -16,7 +16,7 @@
       <div class="encabezado-login">
         <i class="bi bi-person-check-fill icono-titulo"></i>
         <h2 class="titulo">Iniciar Sesión</h2>
-        <p class="subtitulo">Accede a tu cuenta de rentero</p>
+        <p class="subtitulo">Accede a tu cuenta</p>
       </div>
 
       <!-- Formulario de login -->
@@ -96,18 +96,29 @@
           </span>
         </button>
 
-        <!-- Enlace a registro -->
-        <div class="enlace-registro">
+        <!-- Enlaces de registro -->
+        <div class="enlaces-registro">
           <p class="texto-registro">
             ¿No te has registrado?
+          </p>
+          <div class="botones-registro">
             <button
               type="button"
-              class="enlace-registro-boton"
+              class="enlace-registro-boton rentero"
               (click)="irARegistro()"
             >
-              Regístrate aquí
+              <i class="bi bi-house-door"></i>
+              Regístrate como rentero
             </button>
-          </p>
+            <button
+              type="button"
+              class="enlace-registro-boton estudiante"
+              (click)="irARegistroEstudiante()"
+            >
+              <i class="bi bi-mortarboard"></i>
+              Registrate como estudiante
+            </button>
+          </div>
         </div>
 
       </form>

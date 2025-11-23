@@ -1,5 +1,4 @@
 <div class="main-container" *ngIf="!cargando && !error && propiedad">
-
   <div class="property-header">
     <h1 class="property-title">
       <span class="title-text">{{ propiedad.nombre }}</span>
@@ -152,6 +151,28 @@
                 >
                 <span class="price-period">/mes</span>
               </div>
+
+              <div
+                *ngIf="propiedad?.descripcion?.compartido; else individualInfo"
+                class="shared-info"
+              >
+                <div><strong>Compartido:</strong> Sí</div>
+                <div>
+                  <strong>Cupos:</strong>
+                  {{ propiedad.descripcion.compartido_cantidad }}
+                </div>
+                <div>
+                  <strong>Precio por persona:</strong>
+                  ${{
+                    propiedad.descripcion.compartido_precio | number : "1.0-2"
+                  }}
+                  / mes
+                </div>
+              </div>
+
+              <ng-template #individualInfo>
+                <div><strong>Compartido:</strong> No (individual)</div>
+              </ng-template>
             </div>
 
             <div class="rentero-section">

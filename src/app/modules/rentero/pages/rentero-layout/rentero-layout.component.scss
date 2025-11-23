@@ -764,6 +764,15 @@ $color-blanco: #FEFDFE;
     transform: none !important;
   }
 
+  &.boton-asignar {
+    background: #0feb04;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: #0b9904;
+    }
+  }
+
   &.boton-editar {
     background: #007bff;
     color: white;

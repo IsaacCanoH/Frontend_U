@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DocumentoService } from '../../../../core/services/documento.service';
 import { DocumentoValidacionService } from '../../../../core/services/documento-validacion.service';
 import { PropiedadService } from '../../../../core/services/propiedad.service';
-import { RenteroService } from '../../../../core/services/rentero.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { TipoDocumento } from '../../../../interfaces/documento.interface';
 import { FormularioRegistroPropiedad } from '../../../../interfaces/propiedad.interface';
 
@@ -51,7 +51,7 @@ export class FormularioPropiedadComponent implements OnInit, OnDestroy {
     private documentoService: DocumentoService,
     private documentoValidacionService: DocumentoValidacionService,
     private propiedadService: PropiedadService,
-    private renteroService: RenteroService
+    private authService: AuthService
   ) {
     this.formularioPropiedad = this.crearFormulario();
   }
@@ -272,7 +272,7 @@ export class FormularioPropiedadComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const usuarioActual = this.renteroService.obtenerUsuarioActual();
+    const usuarioActual = this.authService.obtenerUsuarioActual();
     if (!usuarioActual) return this.mostrarError('Usuario no autenticado', 'Error de autenticación');
 
     const datosPropiedad = this.construirDatosPropiedad(usuarioActual.id);

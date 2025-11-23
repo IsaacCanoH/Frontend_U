@@ -9,6 +9,9 @@ export interface Descripcion {
   caracteristicas?: string;
   tamaño?: string;
   mobiliario?: string[];
+   compartido?: boolean;
+  compartido_cantidad?: number;
+  compartido_precio?: number;
   [key: string]: any;
 }
 

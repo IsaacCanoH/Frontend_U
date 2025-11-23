@@ -321,20 +321,19 @@
       </form>
 
       <!-- Paso 2: Documentos (solo para registro nuevo) -->
-      <div class="formulario-paso" *ngIf="!esEdicion && pasoActual === 2">
-        <div class="seccion-documento">
-          <h3 class="titulo-seccion">
-            <i class="bi bi-file-earmark-text"></i>
-            Documentación
-          </h3>
-
+      <form
+        *ngIf="!esEdicion && pasoActual === 2"
+        [formGroup]="formularioPropiedad"
+        (ngSubmit)="guardarPropiedad()"
+        class="formulario-paso"
+      >
           <div class="grupo-campo">
-            <label for="tipoDocumento" class="etiqueta">
+            <label for="tipoDocumentoId" class="etiqueta">
               <i class="bi bi-file-earmark"></i>
-              Tipo de Documento
+              Elige el tipo de documento de la propiedad a validar
             </label>
             <select
-              id="tipoDocumento"
+              id="tipoDocumentoId"
               formControlName="tipoDocumentoId"
               (change)="
                 formularioPropiedad
@@ -343,20 +342,33 @@
               "
               class="campo-entrada"
             >
-              <option value="">Seleccione el tipo de documento</option>
+              <option value="">Seleccione un tipo de documento</option>
               <option *ngFor="let tipo of tiposDocumento" [value]="tipo.id">
                 {{ tipo.nombre }}
               </option>
             </select>
-            <div
-              class="mensaje-error"
-              *ngIf="esCampoInvalido('tipoDocumentoId')"
-            >
+            <div class="mensaje-error" *ngIf="esCampoInvalido('tipoDocumentoId')">
               <i class="bi bi-exclamation-circle-fill"></i>
-              <span>Debe seleccionar un tipo de documento</span>
+              <span>Debes seleccionar un tipo de documento</span>
             </div>
           </div>
 
+          <!-- Nota informativa -->
+          <div class="nota-tipos-archivo">
+            <div class="nota-contenido">
+              <i class="bi bi-info-circle-fill"></i>
+              <div class="nota-texto">
+                <p class="nota-principal">Elige el documento de tu propiedad</p>
+                <div class="tipos-permitidos">
+                  <span class="tipo-archivo"><i class="bi bi-file-earmark-text"></i> Recibo de Agua</span>
+                  <span class="tipo-archivo"><i class="bi bi-file-earmark-text"></i> Recibo de Luz</span>
+                </div>
+                <p class="nota-secundaria">Documento oficial que valide la propiedad</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subir archivo -->
           <div class="grupo-campo">
             <label class="etiqueta">
               <i class="bi bi-file-earmark-arrow-up"></i>
@@ -432,34 +444,17 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Botones del paso 2 -->
-        <div class="grupo-botones">
-          <button
-            type="button"
-            (click)="anteriorPaso()"
-            class="boton boton-secundario"
-            [disabled]="procesando"
-          >
-            <i class="bi bi-arrow-left"></i>
-            Anterior
-          </button>
-          <button
-            type="button"
-            (click)="guardarPropiedad()"
-            [disabled]="!archivoValido || procesando"
-            class="boton boton-primario"
-          >
-            <span *ngIf="!procesando">
+          <!-- Botones del paso 2 -->
+          <div class="grupo-botones">
+            <button type="button" (click)="anteriorPaso()" class="boton boton-secundario" [disabled]="procesando">
+              <i class="bi bi-arrow-left"></i> Anterior
+            </button>
+            <button type="submit" [disabled]="!archivoValido || procesando" class="boton boton-primario">
               Registrar Propiedad <i class="bi bi-check-lg"></i>
-            </span>
-            <span *ngIf="procesando">
-              <i class="bi bi-hourglass-split"></i> Registrando...
-            </span>
-          </button>
-        </div>
-      </div>
+            </button>
+          </div>
+      </form>
 
       <!-- Procesamiento de documento -->
       <app-procesamiento-documento

@@ -102,6 +102,7 @@
                         <i class="bi bi-plus-circle"></i>
                         Nueva Unidad
                       </button>
+
                       <button
                         class="boton boton-editar"
                         (click)="editarPropiedad(propiedad.id)"
@@ -201,6 +202,13 @@
                               </td>
                               <td>
                                 <div class="acciones-unidad">
+                                  <button
+                                    class="boton-mini boton-asignar"
+                                    (click)="abrirModalAsignar(unidad.id)"
+                                    title="Asignar Estudiante"
+                                    [disabled]="cargandoUnidades">
+                                    <i class="bi bi-person-plus"></i>
+                                  </button>
                                   <button
                                     class="boton-mini boton-editar"
                                     (click)="editarUnidad(unidad.id)"

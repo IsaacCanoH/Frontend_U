@@ -36,7 +36,7 @@ export class RenteroLayoutComponent implements OnInit {
     private router: Router,
     private propiedadService: PropiedadService,
     private alertasService: AlertasService // AGREGADO
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cargarPropiedades();
@@ -294,6 +294,70 @@ export class RenteroLayoutComponent implements OnInit {
       }
     });
   }
+
+  // dentro de la clase RenteroLayoutComponent
+
+  abrirModalAsignar(unidadId: number): void {
+    Swal.fire({
+      title: 'Asignar estudiante',
+      input: 'email',
+      inputLabel: 'Correo del estudiante',
+      inputPlaceholder: 'correo@ejemplo.com',
+      showCancelButton: true,
+      confirmButtonText: 'Asignar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: (email) => {
+        if (!email) {
+          Swal.showValidationMessage('El correo es obligatorio');
+          return false;
+        }
+        const re = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+        if (!re.test(email)) {
+          Swal.showValidationMessage('Ingresa un correo válido');
+          return false;
+        }
+        return email;
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        this.asignarEstudiante(unidadId, result.value);
+      }
+    });
+  }
+
+  private asignarEstudiante(unidadId: number, email: string): void {
+    Swal.fire({
+      title: 'Asignando estudiante...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading()
+    });
+
+    this.propiedadService.asignarEstudianteAUnidad(unidadId, email).subscribe({
+      next: (resp) => {
+        Swal.close();
+        if (resp && (resp.success || resp.mensaje)) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Asignación exitosa',
+            text: resp.mensaje || 'El estudiante fue asignado a la unidad'
+          });
+          // Actualizar listado de unidades
+          if (this.propiedadExpandida) {
+            this.cargarUnidadesDetalle(this.propiedadExpandida);
+          }
+        } else {
+          Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo asignar el estudiante' });
+        }
+      },
+      error: (err) => {
+        Swal.close();
+        const mensaje = (err?.error?.mensaje) ? err.error.mensaje :
+          (err?.message) ? err.message : 'Error al asignar estudiante';
+        Swal.fire({ icon: 'error', title: 'Error', text: mensaje });
+      }
+    });
+  }
+
 
   trackByPropiedadId(index: number, propiedad: PropiedadBackend): number {
     return propiedad?.id || index;

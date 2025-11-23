@@ -7,7 +7,6 @@ import { FormularioUnidadComponent } from './components/formulario-unidad/formul
 import { RenteroLayoutComponent } from './pages/rentero-layout/rentero-layout.component';
 import { RegistroRenteroComponent } from './pages/registro-rentero/registro-rentero.component';
 import { FormularioPropiedadComponent } from './components/formulario-propiedad/formulario-propiedad.component';
-import { LoginRenteroComponent } from './pages/login-rentero/login-rentero.component';
 import { SharedModule } from '../../shared/shared.module';
 import { MapaSeleccionComponent } from '../../shared/componentes/mapas/mapa-seleccion/mapa-seleccion.component';
 
@@ -16,7 +15,6 @@ import { MapaSeleccionComponent } from '../../shared/componentes/mapas/mapa-sele
     RenteroLayoutComponent,
     RegistroRenteroComponent,
     FormularioPropiedadComponent,
-    LoginRenteroComponent,
     MapaSeleccionComponent,
     FormularioUnidadComponent
   ],

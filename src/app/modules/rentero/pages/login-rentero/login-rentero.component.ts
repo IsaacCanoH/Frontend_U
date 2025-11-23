@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RenteroService } from '../../../../core/services/rentero.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login-rentero',
@@ -16,7 +16,7 @@ export class LoginRenteroComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private renteroService: RenteroService,
+    private authService: AuthService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -26,9 +26,14 @@ export class LoginRenteroComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Si ya está autenticado, redirigir al dashboard
-    if (this.renteroService.estaAutenticado()) {
-      this.router.navigate(['/rentero']);
+    // Si ya está autenticado, redirigir según el tipo de usuario
+    if (this.authService.estaAutenticado()) {
+      const tipoUsuario = this.authService.obtenerTipoUsuario();
+      if (tipoUsuario === 'rentero') {
+        this.router.navigate(['/rentero']);
+      } else if (tipoUsuario === 'estudiante') {
+        this.router.navigate(['/estudiante']);
+      }
     }
   }
 
@@ -39,12 +44,17 @@ export class LoginRenteroComponent implements OnInit {
 
       const credenciales = this.loginForm.value;
 
-      this.renteroService.login(credenciales).subscribe({
+      this.authService.login(credenciales).subscribe({
         next: (response) => {
           this.cargando = false;
           if (response.exito) {
-            // Redirigir al dashboard del rentero
-            this.router.navigate(['/rentero']);
+            // Redirigir según el tipo de usuario
+            const tipoUsuario = this.authService.obtenerTipoUsuario();
+            if (tipoUsuario === 'rentero') {
+              this.router.navigate(['/rentero']);
+            } else if (tipoUsuario === 'estudiante') {
+              this.router.navigate(['/estudiante']);
+            }
           } else {
             this.error = response.mensaje || 'Error en el inicio de sesión';
           }
@@ -65,6 +75,10 @@ export class LoginRenteroComponent implements OnInit {
 
   irARegistro(): void {
     this.router.navigate(['/rentero/registro']);
+  }
+
+  irARegistroEstudiante(): void {
+    this.router.navigate(['/estudiante/registro']);
   }
 
   private marcarCamposComoTocados(): void {

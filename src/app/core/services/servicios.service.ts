@@ -17,4 +17,14 @@ export class ServiciosService {
     });
     return this.http.get<any>(`${this.apiUrl}/disponibles`, { params, headers });
   }
+  
+  obtenerServiciosPorAsignacion(estudianteUnidadId: number): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}` });
+    return this.http.get<any>(`${this.apiUrl}/asignacion/${estudianteUnidadId}`, { headers });
+  }
+
+  agregarServicioAAsignacion(estudianteUnidadId: number, servicioId: number): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}`, 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.apiUrl}/asignacion/${estudianteUnidadId}/agregar`, { servicio_id: servicioId }, { headers });
+  }
 }

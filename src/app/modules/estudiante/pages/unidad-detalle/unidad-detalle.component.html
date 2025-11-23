@@ -120,6 +120,24 @@
               No hay servicios extras
             </div>
           </div>
+          <div class="actions-extras" style="margin-top: 1rem">
+            <button
+              class="button2"
+              *ngIf="!isProcessingExtras && (serviciosSeleccionadosExtras?.length ?? 0) > 0"
+
+              (click)="applySelectedExtras()"
+            >
+              {{
+                assignedServices.length === 0
+                  ? "Adquirir Servicios"
+                  : "Actualizar Servicios"
+              }}
+            </button>
+
+            <button class="button2" disabled *ngIf="isProcessingExtras">
+              Procesando...
+            </button>
+          </div>
         </div>
       </div>
     </div>

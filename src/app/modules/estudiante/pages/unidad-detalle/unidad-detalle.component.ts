@@ -25,4 +25,11 @@ export class UnidadDetalleComponent implements OnInit {
       error: () => { this.cargando = false; }
     });
   }
+
+  get serviciosBase(): any[] {
+  const lista = this.unidad?.descripcion?.servicios || [];
+  return lista
+    .map((s: any) => (typeof s === 'object' ? s : { nombre: s }))
+    .filter((s: any) => !!s && s.es_base === true);
+}
 }

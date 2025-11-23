@@ -106,12 +106,11 @@
               <span>Terraza</span>
             </div>
 
-            <div
-              class="amenity-item"
-              *ngFor="let servicio of propiedad.descripcion.servicios"
-            >
-              <span>{{ servicio | titlecase }}</span>
-            </div>
+            <ng-container *ngIf="serviciosBase.length > 0">
+              <div class="amenity-item" *ngFor="let servicio of serviciosBase">
+                <span>{{ servicio.nombre | titlecase }}</span>
+              </div>
+            </ng-container>
           </div>
         </div>
       </div>

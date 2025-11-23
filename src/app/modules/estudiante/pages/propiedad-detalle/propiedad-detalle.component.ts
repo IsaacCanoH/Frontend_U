@@ -91,8 +91,8 @@ export class PropiedadDetalleComponent implements OnInit, OnDestroy {
 
       // Verificar que las coordenadas sean válidas
       if (coords.length >= 2 &&
-          typeof coords[0] === 'number' &&
-          typeof coords[1] === 'number') {
+        typeof coords[0] === 'number' &&
+        typeof coords[1] === 'number') {
         // GeoJSON usa [longitud, latitud], pero necesitamos [latitud, longitud]
         this.propiedadLng = coords[0]; // longitud
         this.propiedadLat = coords[1];  // latitud
@@ -188,6 +188,12 @@ export class PropiedadDetalleComponent implements OnInit, OnDestroy {
   // Método auxiliar para verificar si hay servicios
   tieneServicios(): boolean {
     return !!(this.propiedad?.descripcion?.servicios &&
-              this.propiedad.descripcion.servicios.length > 0);
+      this.propiedad.descripcion.servicios.length > 0);
   }
+
+  // Devuelve sólo los servicios marcados como base
+  get serviciosBase(): any[] {
+    return this.propiedad?.descripcion?.servicios?.filter((s: any) => !!s && !!s.es_base) || [];
+  }
+
 }

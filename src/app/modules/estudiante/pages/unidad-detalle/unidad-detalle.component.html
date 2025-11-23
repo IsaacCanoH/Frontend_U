@@ -1,5 +1,4 @@
 <div class="main-container" *ngIf="!cargando && unidad">
-
   <!-- Header -->
   <div class="detail-header">
     <h1 class="detail-title">
@@ -11,7 +10,7 @@
           <i class="fas fa-house"></i>
         </div>
         <span>
-          <strong>{{ unidad.propiedad.nombre }}</strong> 
+          <strong>{{ unidad.propiedad.nombre }}</strong>
         </span>
       </div>
     </div>
@@ -24,17 +23,20 @@
       <!-- Galería -->
       <div class="gallery-card" *ngIf="unidad.imagenes?.length">
         <div class="gallery-main">
-          <img 
-            [src]="unidad.imagenes?.[0] || '/assets/default-property.jpg'" 
-            alt="{{unidad.nombre}}"
+          <img
+            [src]="unidad.imagenes?.[0] || '/assets/default-property.jpg'"
+            alt="{{ unidad.nombre }}"
             class="main-image"
-          >
+          />
           <div class="gallery-overlay"></div>
         </div>
       </div>
 
       <!-- Descripción -->
-      <div class="card description-card" *ngIf="unidad.descripcion?.caracteristicas">
+      <div
+        class="card description-card"
+        *ngIf="unidad.descripcion?.caracteristicas"
+      >
         <div class="card-content">
           <div class="section-header">
             <div class="section-icon">
@@ -52,7 +54,10 @@
       </div>
 
       <!-- Servicios -->
-      <div class="card services-card" *ngIf="unidad.descripcion?.servicios?.length">
+      <div
+        class="card services-card"
+        *ngIf="unidad.descripcion?.servicios?.length"
+      >
         <div class="card-content">
           <div class="section-header">
             <div class="section-icon">
@@ -61,11 +66,11 @@
             <h2 class="section-title">Servicios incluidos</h2>
           </div>
           <div class="services-grid">
-            <div class="service-item" *ngFor="let s of unidad.descripcion.servicios">
+            <div class="service-item" *ngFor="let s of serviciosBase">
               <div class="service-icon">
                 <i class="fas fa-check"></i>
               </div>
-              <span>{{ s | titlecase }}</span>
+              <span>{{ s.nombre | titlecase }}</span>
             </div>
           </div>
         </div>
@@ -82,7 +87,9 @@
             <div class="pricing-section">
               <div class="price-badge">Precio</div>
               <div class="price-main">
-                <span class="price-amount">${{ unidad.precio | number:'1.0-0' }}</span>
+                <span class="price-amount"
+                  >${{ unidad.precio | number : "1.0-0" }}</span
+                >
                 <span class="price-period">/mes</span>
               </div>
             </div>
@@ -98,16 +105,16 @@
 
               <div class="host-profile">
                 <div class="host-avatar">
-                  <img 
-                    src="/assets/avatar-default.png" 
+                  <img
+                    src="/assets/avatar-default.png"
                     alt="Rentero"
                     class="avatar-image"
-                  >
+                  />
                 </div>
 
                 <div class="host-info">
                   <h4 class="host-name">{{ unidad.rentero.nombre }}</h4>
-                  
+
                   <div class="contact-info">
                     <div class="contact-item">
                       <i class="fas fa-phone-alt"></i>

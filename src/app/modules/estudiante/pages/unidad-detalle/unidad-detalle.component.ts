@@ -11,7 +11,9 @@ export class UnidadDetalleComponent implements OnInit {
   unidad: any = null;
   cargando = false;
 
-  constructor(private route: ActivatedRoute, private estudianteService: EstudianteService) {}
+  serviciosSeleccionadosExtras: number[] = [];
+
+  constructor(private route: ActivatedRoute, private estudianteService: EstudianteService) { }
 
   ngOnInit(): void {
     const id = +this.route.snapshot.params['id'];
@@ -27,9 +29,27 @@ export class UnidadDetalleComponent implements OnInit {
   }
 
   get serviciosBase(): any[] {
-  const lista = this.unidad?.descripcion?.servicios || [];
-  return lista
-    .map((s: any) => (typeof s === 'object' ? s : { nombre: s }))
-    .filter((s: any) => !!s && s.es_base === true);
-}
+    const lista = this.unidad?.descripcion?.servicios || [];
+    return lista
+      .map((s: any) => (typeof s === 'object' ? s : { nombre: s }))
+      .filter((s: any) => !!s && s.es_base === true);
+  }
+
+  get serviciosExtras(): any[] {
+    const lista = this.unidad?.descripcion?.servicios || [];
+    return lista
+      .map((s: any) => (typeof s === 'object' ? s : { nombre: s }))
+      .filter((s: any) => !!s && s.es_base === false);
+  }
+
+  toggleExtra(servicioId: number): void {
+    const id = Number(servicioId);
+    const i = this.serviciosSeleccionadosExtras.indexOf(id);
+    if (i === -1) this.serviciosSeleccionadosExtras.push(id);
+    else this.serviciosSeleccionadosExtras.splice(i, 1);
+  }
+
+  isExtraSelected(servicioId: number): boolean {
+    return this.serviciosSeleccionadosExtras.includes(Number(servicioId));
+  }
 }

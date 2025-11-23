@@ -75,6 +75,53 @@
           </div>
         </div>
       </div>
+
+      <!-- Servicios extras (seleccionables por el estudiante) -->
+      <div
+        class="card services-card"
+        *ngIf="unidad.descripcion?.servicios?.length"
+      >
+        <div class="card-content">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h2 class="section-title">Servicios extras</h2>
+          </div>
+
+          <div class="services-grid">
+            <!-- Servicio extra: item clicable entero -->
+            <div
+              class="service-item"
+              *ngFor="let s of serviciosExtras"
+              role="button"
+              tabindex="0"
+              (click)="toggleExtra(s.id)"
+              (keydown.enter)="toggleExtra(s.id)"
+              (keydown.space)="toggleExtra(s.id)"
+              [attr.aria-pressed]="isExtraSelected(s.id)"
+            >
+              <div class="service-icon">
+                <!-- mostrar check sólo si está seleccionado -->
+                <i class="fas fa-check" *ngIf="isExtraSelected(s.id)"></i>
+              </div>
+
+              <span class="service-name">{{ s.nombre | titlecase }}</span>
+
+              <span
+                class="service-price"
+                *ngIf="s.precio !== undefined && s.precio !== null"
+              >
+                ${{ s.precio | number : "1.0-2" }}
+              </span>
+            </div>
+
+            <div *ngIf="serviciosExtras.length === 0" class="empty">
+              No hay servicios extras
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Sidebar -->

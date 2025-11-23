@@ -199,38 +199,39 @@
             Servicios Incluidos
           </h3>
 
-          <!-- Servicios incluidos / ofrecidos por el rentero -->
-          <div class="servicios-section">
-            <h4>Servicios base (opciones)</h4>
-            <div class="servicios-grid">
-              <label *ngFor="let s of serviciosBase" class="servicio-item">
-                <input
-                  type="checkbox"
-                  [checked]="isServicioSeleccionado(s.id)"
-                  (change)="toggleServicio(s.id)"
-                />
-                <span class="servicio-nombre">{{ s.nombre }}</span>
-                <small class="servicio-precio"
-                  >${{ s.precio | number : "1.0-2" }} / mes</small
-                >
-              </label>
-            </div>
-
-            <h4>Servicios extras</h4>
-            <div class="servicios-grid">
-              <label *ngFor="let s of serviciosExtras" class="servicio-item">
-                <input
-                  type="checkbox"
-                  [checked]="isServicioSeleccionado(s.id)"
-                  (change)="toggleServicio(s.id)"
-                />
-                <span class="servicio-nombre">{{ s.nombre }}</span>
-                <small class="servicio-precio"
-                  >${{ s.precio | number : "1.0-2" }} / mes</small
-                >
-              </label>
-            </div>
+          <div class="servicios-grid">
+            <label
+              *ngFor="let s of serviciosBase"
+              class="servicio-item"
+              [class.seleccionado]="isServicioSeleccionado(servicio)"
+            >
+              <input
+                type="checkbox"
+                [checked]="true"
+              />
+              <span class="servicio-content">
+                {{ s.nombre }}
+              </span>
+            </label>
           </div>
+
+          <div class="servicios-grid">
+            <label
+              *ngFor="let s of serviciosExtras"
+              class="servicio-item"
+              [class.seleccionado]="isServicioSeleccionado(servicio)"
+            >
+              <input
+                type="checkbox"
+                [checked]="isServicioSeleccionado(s.id)"
+                 (change)="toggleServicio(s.id)" 
+              />
+              <span class="servicio-content">
+                {{ s.nombre }} ${{ s.precio | number:'1.0-2' }}
+              </span>
+            </label>
+          </div>
+
         </div>
 
         <!-- Imágenes de la unidad -->

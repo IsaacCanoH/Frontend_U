@@ -439,6 +439,7 @@ export class FormularioUnidadComponent implements OnInit, OnDestroy {
         caracteristicas: formValue.caracteristicas || ''
       };
 
+
       const datosUnidad: FormularioRegistroUnidad = {
         propiedad_id: this.propiedadId,
         nombre: formValue.nombre || `Unidad ${Date.now()}`,
@@ -505,10 +506,20 @@ export class FormularioUnidadComponent implements OnInit, OnDestroy {
         imagenesFinales = [...imagenesFinales, ...imagenesNuevas];
       }
 
+      const serviciosObj = this.serviciosSeleccionados
+        .map(id => this.serviciosCatalogo.find((s: any) => Number(s.id) === Number(id)))
+        .filter((s: any) => !!s)
+        .map((s: any) => ({
+          id: s.id,
+          nombre: s.nombre,
+          precio: s.precio,
+          es_base: !!s.es_base
+        }));
+
       const descripcion: any = {
         terraza: formValue.terraza || false,
         amueblado: formValue.amueblado || false,
-        servicios: this.serviciosSeleccionados,
+        servicios: serviciosObj,
         caracteristicas: formValue.caracteristicas || ''
       };
 

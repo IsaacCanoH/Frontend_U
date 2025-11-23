@@ -8,7 +8,7 @@ import { AlertasService } from '../../../../core/services/alertas.service';
 @Component({
   selector: 'app-unidad-detalle',
   templateUrl: './unidad-detalle.component.html',
-  styleUrls: ['./unidad-detalle.component.scss'] 
+  styleUrls: ['./unidad-detalle.component.scss']
 })
 export class UnidadDetalleComponent implements OnInit {
   unidad: any = null;
@@ -91,34 +91,57 @@ export class UnidadDetalleComponent implements OnInit {
     return this.assignedServices.map(s => Number(s.id));
   }
 
-  // Enviar al backend los servicios seleccionados (solo los que son nuevos)
+  // Enviar al backend los cambios en los servicios extras (agregar y quitar)
   async applySelectedExtras(): Promise<void> {
     if (!this.estudianteUnidadId) {
       this.alertasService.mostrarError('No existe asignación para la unidad', 'Error');
       return;
     }
 
-    const aIds = this.assignedServiceIds;
-    const toAdd = this.serviciosSeleccionadosExtras.filter(id => !aIds.includes(id));
-    if (toAdd.length === 0) {
-      this.alertasService.mostrarAdvertencia('No hay servicios nuevos para agregar');
+    // ids de servicios EXTRA actualmente asignados (no base)
+    const assignedExtrasIds = this.assignedServices
+      .filter((s: any) => !s.es_base)
+      .map((s: any) => Number(s.id));
+
+    // los que el usuario seleccionó en la UI
+    const selectedIds = this.serviciosSeleccionadosExtras.map(Number);
+
+    // nuevos a agregar = seleccionados que antes no estaban
+    const toAdd = selectedIds.filter(id => !assignedExtrasIds.includes(id));
+
+    // a quitar = asignados antes pero que ya NO están seleccionados
+    const toRemove = assignedExtrasIds.filter(id => !selectedIds.includes(id));
+
+    if (toAdd.length === 0 && toRemove.length === 0) {
+      this.alertasService.mostrarAdvertencia('No hay cambios en los servicios extras');
       return;
     }
 
     this.isProcessingExtras = true;
     try {
-      // añadir uno por uno para que el backend registre precio_snapshot y estado
+      // 1) Agregar nuevos
       for (const sid of toAdd) {
-        await firstValueFrom(this.serviciosService.agregarServicioAAsignacion(this.estudianteUnidadId, sid));
+        await firstValueFrom(
+          this.serviciosService.agregarServicioAAsignacion(this.estudianteUnidadId, sid)
+        );
       }
-      // recargar servicios asignados
+
+      // 2) Eliminar los que se quitaron
+      for (const sid of toRemove) {
+        await firstValueFrom(
+          this.serviciosService.eliminarServicioDeAsignacion(this.estudianteUnidadId, sid)
+        );
+      }
+
+      // 3) Recargar servicios asignados y sincronizar selección
       await this.loadAssignedServices();
-      this.alertasService.mostrarExito('Servicios agregados correctamente');
+      this.alertasService.mostrarExito('Servicios actualizados correctamente');
     } catch (err) {
-      console.error('Error al agregar servicios', err);
-      this.alertasService.manejarErrores(err, 'agregar servicios');
+      console.error('Error al actualizar servicios', err);
+      this.alertasService.manejarErrores(err, 'actualizar servicios');
     } finally {
       this.isProcessingExtras = false;
     }
   }
+
 }

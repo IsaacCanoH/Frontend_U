@@ -407,6 +407,16 @@ export class RenteroLayoutComponent implements OnInit {
     }
   }
 
+  getServiciosTexto(unidad: any): string {
+    const servicios = unidad?.descripcion?.servicios || [];
+
+    return servicios
+      .map((s: any) => s?.nombre)      // toma solo el nombre
+      .filter((n: string) => !!n)      // quita nulos/vacíos
+      .join(', ');                     // los une con coma
+  }
+
+
   recargarDatos(): void {
     this.alertasService.mostrarInfo('Recargando datos...', 'Actualizando');
     this.cargarPropiedades();

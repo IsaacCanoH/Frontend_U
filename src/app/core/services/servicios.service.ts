@@ -26,4 +26,14 @@ export class ServiciosService {
     return this.http.post<any>(`${this.apiUrl}/asignacion/${estudianteUnidadId}/agregar`, { servicio_id: servicioId }, { headers });
   }
 
+  eliminarServicioDeAsignacion(estudianteUnidadId: number, servicioId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}`
+    });
+    return this.http.delete<any>(
+      `${this.apiUrl}/asignacion/${estudianteUnidadId}/servicio/${servicioId}`,
+      { headers }
+    );
+  }
+
 }

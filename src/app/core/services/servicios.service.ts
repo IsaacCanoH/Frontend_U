@@ -1,4 +1,3 @@
-// src/app/core/services/servicios.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,7 +6,7 @@ import { Observable } from 'rxjs';
 export class ServiciosService {
   private apiUrl = 'http://localhost:3000/servicios';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   obtenerServiciosDisponibles(soloAdicionales = false): Observable<any> {
     const params = soloAdicionales ? new HttpParams().set('solo_adicionales', 'true') : undefined;
@@ -17,7 +16,7 @@ export class ServiciosService {
     });
     return this.http.get<any>(`${this.apiUrl}/disponibles`, { params, headers });
   }
-  
+
   obtenerServiciosPorAsignacion(estudianteUnidadId: number): Observable<any> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}` });
     return this.http.get<any>(`${this.apiUrl}/asignacion/${estudianteUnidadId}`, { headers });

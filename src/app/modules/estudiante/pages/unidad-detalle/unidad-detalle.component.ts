@@ -8,7 +8,7 @@ import { AlertasService } from '../../../../core/services/alertas.service';
 @Component({
   selector: 'app-unidad-detalle',
   templateUrl: './unidad-detalle.component.html',
-  styleUrls: ['./unidad-detalle.component.scss']
+  styleUrls: ['./unidad-detalle.component.scss'] 
 })
 export class UnidadDetalleComponent implements OnInit {
   unidad: any = null;
@@ -79,28 +79,27 @@ export class UnidadDetalleComponent implements OnInit {
     try {
       const resp = await firstValueFrom(this.serviciosService.obtenerServiciosPorAsignacion(this.estudianteUnidadId));
       this.assignedServices = Array.isArray(resp) ? resp : (resp?.data ?? []);
+      // sincronizar selección (marcar los que ya están)
       this.serviciosSeleccionadosExtras = this.assignedServices.map(s => Number(s.id));
     } catch (err) {
       console.error('Error cargando servicios asignados', err);
     }
   }
 
+  // Ids de los servicios ya asignados (helper)
   get assignedServiceIds(): number[] {
     return this.assignedServices.map(s => Number(s.id));
   }
 
+  // Enviar al backend los servicios seleccionados (solo los que son nuevos)
   async applySelectedExtras(): Promise<void> {
     if (!this.estudianteUnidadId) {
       this.alertasService.mostrarError('No existe asignación para la unidad', 'Error');
       return;
     }
 
-    const assignedIds = this.assignedServiceIds; // assignedServices.map(s=>s.id)
-    const selectedIds = this.serviciosSeleccionadosExtras || [];
-
     const aIds = this.assignedServiceIds;
     const toAdd = this.serviciosSeleccionadosExtras.filter(id => !aIds.includes(id));
-    const toRemove = assignedIds.filter(id => !selectedIds.includes(id));
     if (toAdd.length === 0) {
       this.alertasService.mostrarAdvertencia('No hay servicios nuevos para agregar');
       return;
@@ -108,15 +107,12 @@ export class UnidadDetalleComponent implements OnInit {
 
     this.isProcessingExtras = true;
     try {
-      for (const sid of toRemove) {
-        await firstValueFrom(this.serviciosService.eliminarServicioDeAsignacion(this.estudianteUnidadId, sid));
-      }
-
+      // añadir uno por uno para que el backend registre precio_snapshot y estado
       for (const sid of toAdd) {
         await firstValueFrom(this.serviciosService.agregarServicioAAsignacion(this.estudianteUnidadId, sid));
       }
+      // recargar servicios asignados
       await this.loadAssignedServices();
-      this.serviciosSeleccionadosExtras = this.assignedServiceIds.slice();
       this.alertasService.mostrarExito('Servicios agregados correctamente');
     } catch (err) {
       console.error('Error al agregar servicios', err);

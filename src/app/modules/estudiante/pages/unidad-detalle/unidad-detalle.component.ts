@@ -8,7 +8,7 @@ import { AlertasService } from '../../../../core/services/alertas.service';
 @Component({
   selector: 'app-unidad-detalle',
   templateUrl: './unidad-detalle.component.html',
-  styleUrls: ['./unidad-detalle.component.scss'] 
+  styleUrls: ['./unidad-detalle.component.scss']
 })
 export class UnidadDetalleComponent implements OnInit {
   unidad: any = null;
@@ -95,8 +95,12 @@ export class UnidadDetalleComponent implements OnInit {
       return;
     }
 
+    const assignedIds = this.assignedServiceIds; // assignedServices.map(s=>s.id)
+    const selectedIds = this.serviciosSeleccionadosExtras || [];
+
     const aIds = this.assignedServiceIds;
     const toAdd = this.serviciosSeleccionadosExtras.filter(id => !aIds.includes(id));
+    const toRemove = assignedIds.filter(id => !selectedIds.includes(id));
     if (toAdd.length === 0) {
       this.alertasService.mostrarAdvertencia('No hay servicios nuevos para agregar');
       return;
@@ -104,10 +108,15 @@ export class UnidadDetalleComponent implements OnInit {
 
     this.isProcessingExtras = true;
     try {
+      for (const sid of toRemove) {
+        await firstValueFrom(this.serviciosService.eliminarServicioDeAsignacion(this.estudianteUnidadId, sid));
+      }
+
       for (const sid of toAdd) {
         await firstValueFrom(this.serviciosService.agregarServicioAAsignacion(this.estudianteUnidadId, sid));
       }
       await this.loadAssignedServices();
+      this.serviciosSeleccionadosExtras = this.assignedServiceIds.slice();
       this.alertasService.mostrarExito('Servicios agregados correctamente');
     } catch (err) {
       console.error('Error al agregar servicios', err);

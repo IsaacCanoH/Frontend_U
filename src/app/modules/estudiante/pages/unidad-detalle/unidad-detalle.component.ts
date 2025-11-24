@@ -74,51 +74,17 @@ export class UnidadDetalleComponent implements OnInit {
     return this.serviciosSeleccionadosExtras.includes(Number(servicioId));
   }
 
-  // Servicio extra bloqueado si tiene una fecha_fin en el futuro
-  isExtraBlocked(servicioId: number): boolean {
-    const s = this.assignedServices.find(
-      (srv: any) => Number(srv.id) === Number(servicioId)
-    );
-    if (!s || !s.estudiante_unidad_servicio) return false;
-
-    const link = s.estudiante_unidad_servicio;
-    if (!link.fecha_fin) return false;
-
-    const now = new Date();
-    const ff = new Date(link.fecha_fin);
-
-    // Bloqueado si todavía no se alcanza la fecha_fin
-    return ff > now;
-  }
-
-  // Opcional: solo marcamos como "seleccionados" los extras vigentes
-  private syncSelectedExtras(): void {
-    const now = new Date();
-    this.serviciosSeleccionadosExtras = this.assignedServices
-      .filter((s: any) => !s.es_base)
-      .filter((s: any) => {
-        const link = s.estudiante_unidad_servicio || {};
-        const ff = link.fecha_fin ? new Date(link.fecha_fin) : null;
-        return !ff || ff > now;
-      })
-      .map((s: any) => Number(s.id));
-  }
-
-
   async loadAssignedServices(): Promise<void> {
     if (!this.estudianteUnidadId) return;
     try {
-      const resp = await firstValueFrom(
-        this.serviciosService.obtenerServiciosPorAsignacion(this.estudianteUnidadId)
-      );
+      const resp = await firstValueFrom(this.serviciosService.obtenerServiciosPorAsignacion(this.estudianteUnidadId));
       this.assignedServices = Array.isArray(resp) ? resp : (resp?.data ?? []);
-      // sincronizar selección solo con extras vigentes
-      this.syncSelectedExtras();
+      // sincronizar selección (marcar los que ya están)
+      this.serviciosSeleccionadosExtras = this.assignedServices.map(s => Number(s.id));
     } catch (err) {
       console.error('Error cargando servicios asignados', err);
     }
   }
-
 
   // Ids de los servicios ya asignados (helper)
   get assignedServiceIds(): number[] {

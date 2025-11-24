@@ -109,9 +109,7 @@
               </div>
 
               <div class="service-content-extra">
-                <span class="service-name-extra">{{
-                  s.nombre | titlecase
-                }}</span>
+                <span class="service-name-extra">{{ s.nombre | titlecase }}</span>
                 <span
                   class="service-price-extra"
                   *ngIf="s.precio !== undefined && s.precio !== null"
@@ -130,10 +128,7 @@
           <div class="actions-extras-container">
             <button
               class="button-primary"
-              *ngIf="
-                !isProcessingExtras &&
-                (serviciosSeleccionadosExtras?.length ?? 0) > 0
-              "
+              *ngIf="!isProcessingExtras && (serviciosSeleccionadosExtras?.length ?? 0) > 0"
               (click)="applySelectedExtras()"
             >
               <i class="fas fa-check-circle"></i>
@@ -144,11 +139,7 @@
               }}
             </button>
 
-            <button
-              class="button-primary loading"
-              disabled
-              *ngIf="isProcessingExtras"
-            >
+            <button class="button-primary loading" disabled *ngIf="isProcessingExtras">
               <i class="fas fa-spinner fa-spin"></i>
               Procesando...
             </button>

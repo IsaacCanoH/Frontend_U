@@ -33,7 +33,6 @@ export class UnidadDetalleComponent implements OnInit {
   cargar(id: number) {
     this.cargando = true;
 
-    // 👇 Resetear estado local para no arrastrar selección de otra unidad / intento previo
     this.unidad = null;
     this.assignedServices = [];
     this.serviciosSeleccionadosExtras = [];
@@ -50,7 +49,6 @@ export class UnidadDetalleComponent implements OnInit {
       error: (err) => {
         this.cargando = false;
         console.error('Error cargando unidad:', err);
-        // 👇 también limpiar en caso de error para no dejar selección basura
         this.assignedServices = [];
         this.serviciosSeleccionadosExtras = [];
       }
@@ -91,7 +89,6 @@ export class UnidadDetalleComponent implements OnInit {
   toggleExtra(servicioId: number): void {
     const id = Number(servicioId);
 
-    // 👉 No permitir cambiar un extra bloqueado (cancelado pero aún vigente)
     if (this.isExtraBlocked(id)) return;
 
     const i = this.serviciosSeleccionadosExtras.indexOf(id);
@@ -103,7 +100,6 @@ export class UnidadDetalleComponent implements OnInit {
     return this.serviciosSeleccionadosExtras.includes(Number(servicioId));
   }
 
-  // 👉 Sincronizar selección solo con EXTRAS vigentes (no base, sin fecha_fin pasada)
   private syncSelectedExtras(): void {
     const now = new Date();
     const extrasIds = (this.serviciosExtras || []).map((s: any) => Number(s.id));
@@ -115,24 +111,19 @@ export class UnidadDetalleComponent implements OnInit {
         const estado = String(link.estado || '').toLowerCase();
         const ff = link.fecha_fin ? new Date(link.fecha_fin) : null;
 
-        // nunca marcar cancelados
         if (estado === 'cancelado') return false;
-        // ni los que ya terminaron
         if (ff && ff <= now) return false;
 
         return true;
       })
       .map((s: any) => Number(s.id));
 
-    // Solo extras válidos de esta unidad y sin duplicados
     this.serviciosSeleccionadosExtras = Array.from(
       new Set(
         seleccionados.filter((id: number) => extrasIds.includes(id))
       )
     );
   }
-
-
 
   async loadAssignedServices(): Promise<void> {
     if (!this.estudianteUnidadId) return;
@@ -143,7 +134,6 @@ export class UnidadDetalleComponent implements OnInit {
       const raw = Array.isArray(resp) ? resp : (resp?.data ?? []);
       const now = new Date();
 
-      // 👉 Guardar solo servicios cuyo vínculo siga vigente (sin fecha_fin pasada)
       this.assignedServices = raw.filter((s: any) => {
         const link = s.estudiante_unidad_servicio;
         if (!link) return true; // por si acaso
@@ -151,40 +141,30 @@ export class UnidadDetalleComponent implements OnInit {
         return !ff || ff > now;
       });
 
-      // 👉 actualizar checkboxes de extras
       this.syncSelectedExtras();
     } catch (err) {
       console.error('Error cargando servicios asignados', err);
-      // 👇 evitar que se queden seleccionados viejos si la carga falla
       this.assignedServices = [];
       this.serviciosSeleccionadosExtras = [];
     }
   }
 
-  // Ids de los servicios ya asignados (helper)
   get assignedServiceIds(): number[] {
     return this.assignedServices.map(s => Number(s.id));
   }
 
-  // Enviar al backend los cambios en los servicios extras (agregar y quitar)
   async applySelectedExtras(): Promise<void> {
     if (!this.estudianteUnidadId) {
       this.alertasService.mostrarError('No existe asignación para la unidad', 'Error');
       return;
     }
 
-    // ids de servicios EXTRA actualmente asignados (no base)
     const assignedExtrasIds = this.assignedServices
       .filter((s: any) => !s.es_base)
       .map((s: any) => Number(s.id));
 
-    // los que el usuario seleccionó en la UI
     const selectedIds = this.serviciosSeleccionadosExtras.map(Number);
-
-    // nuevos a agregar = seleccionados que antes no estaban
     const toAdd = selectedIds.filter(id => !assignedExtrasIds.includes(id));
-
-    // a quitar = asignados antes pero que ya NO están seleccionados
     const toRemove = assignedExtrasIds.filter(id => !selectedIds.includes(id));
 
     if (toAdd.length === 0 && toRemove.length === 0) {
@@ -211,6 +191,15 @@ export class UnidadDetalleComponent implements OnInit {
       // 3) Recargar servicios asignados y sincronizar selección
       await this.loadAssignedServices();
       this.alertasService.mostrarExito('Servicios actualizados correctamente');
+
+      try {
+        await firstValueFrom(
+          this.serviciosService.enviarPrefacturaAsignacion(this.estudianteUnidadId)
+        );
+        console.log('Pre-factura enviada por correo');
+      } catch (e) {
+        console.error('Error enviando la pre-factura por correo', e);
+      }
     } catch (err) {
       console.error('Error al actualizar servicios', err);
       this.alertasService.manejarErrores(err, 'actualizar servicios');

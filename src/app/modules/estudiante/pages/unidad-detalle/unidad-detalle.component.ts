@@ -32,6 +32,12 @@ export class UnidadDetalleComponent implements OnInit {
 
   cargar(id: number) {
     this.cargando = true;
+
+    // 👇 Resetear estado local para no arrastrar selección de otra unidad / intento previo
+    this.unidad = null;
+    this.assignedServices = [];
+    this.serviciosSeleccionadosExtras = [];
+
     this.estudianteService.obtenerUnidadAsignada(id).subscribe({
       next: async (res) => {
         this.unidad = res.data;
@@ -44,9 +50,13 @@ export class UnidadDetalleComponent implements OnInit {
       error: (err) => {
         this.cargando = false;
         console.error('Error cargando unidad:', err);
+        // 👇 también limpiar en caso de error para no dejar selección basura
+        this.assignedServices = [];
+        this.serviciosSeleccionadosExtras = [];
       }
     });
   }
+
 
   get serviciosBase(): any[] {
     const lista = this.unidad?.descripcion?.servicios || [];
@@ -62,9 +72,28 @@ export class UnidadDetalleComponent implements OnInit {
       .filter((s: any) => !!s && s.es_base === false);
   }
 
+  // 👉 Servicio extra bloqueado si tiene fecha_fin futura
+  isExtraBlocked(servicioId: number): boolean {
+    const s = this.assignedServices.find(
+      (srv: any) => Number(srv.id) === Number(servicioId)
+    );
+    if (!s || !s.estudiante_unidad_servicio) return false;
+
+    const link = s.estudiante_unidad_servicio;
+    if (!link.fecha_fin) return false;
+
+    const now = new Date();
+    const ff = new Date(link.fecha_fin);
+
+    return ff > now;
+  }
 
   toggleExtra(servicioId: number): void {
     const id = Number(servicioId);
+
+    // 👉 No permitir cambiar un extra bloqueado (cancelado pero aún vigente)
+    if (this.isExtraBlocked(id)) return;
+
     const i = this.serviciosSeleccionadosExtras.indexOf(id);
     if (i === -1) this.serviciosSeleccionadosExtras.push(id);
     else this.serviciosSeleccionadosExtras.splice(i, 1);
@@ -74,15 +103,61 @@ export class UnidadDetalleComponent implements OnInit {
     return this.serviciosSeleccionadosExtras.includes(Number(servicioId));
   }
 
+  // 👉 Sincronizar selección solo con EXTRAS vigentes (no base, sin fecha_fin pasada)
+  private syncSelectedExtras(): void {
+    const now = new Date();
+    const extrasIds = (this.serviciosExtras || []).map((s: any) => Number(s.id));
+
+    const seleccionados = this.assignedServices
+      .filter((s: any) => !s.es_base)
+      .filter((s: any) => {
+        const link = s.estudiante_unidad_servicio || {};
+        const estado = String(link.estado || '').toLowerCase();
+        const ff = link.fecha_fin ? new Date(link.fecha_fin) : null;
+
+        // nunca marcar cancelados
+        if (estado === 'cancelado') return false;
+        // ni los que ya terminaron
+        if (ff && ff <= now) return false;
+
+        return true;
+      })
+      .map((s: any) => Number(s.id));
+
+    // Solo extras válidos de esta unidad y sin duplicados
+    this.serviciosSeleccionadosExtras = Array.from(
+      new Set(
+        seleccionados.filter((id: number) => extrasIds.includes(id))
+      )
+    );
+  }
+
+
+
   async loadAssignedServices(): Promise<void> {
     if (!this.estudianteUnidadId) return;
     try {
-      const resp = await firstValueFrom(this.serviciosService.obtenerServiciosPorAsignacion(this.estudianteUnidadId));
-      this.assignedServices = Array.isArray(resp) ? resp : (resp?.data ?? []);
-      // sincronizar selección (marcar los que ya están)
-      this.serviciosSeleccionadosExtras = this.assignedServices.map(s => Number(s.id));
+      const resp = await firstValueFrom(
+        this.serviciosService.obtenerServiciosPorAsignacion(this.estudianteUnidadId)
+      );
+      const raw = Array.isArray(resp) ? resp : (resp?.data ?? []);
+      const now = new Date();
+
+      // 👉 Guardar solo servicios cuyo vínculo siga vigente (sin fecha_fin pasada)
+      this.assignedServices = raw.filter((s: any) => {
+        const link = s.estudiante_unidad_servicio;
+        if (!link) return true; // por si acaso
+        const ff = link.fecha_fin ? new Date(link.fecha_fin) : null;
+        return !ff || ff > now;
+      });
+
+      // 👉 actualizar checkboxes de extras
+      this.syncSelectedExtras();
     } catch (err) {
       console.error('Error cargando servicios asignados', err);
+      // 👇 evitar que se queden seleccionados viejos si la carga falla
+      this.assignedServices = [];
+      this.serviciosSeleccionadosExtras = [];
     }
   }
 
